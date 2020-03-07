@@ -1,6 +1,6 @@
 <template>
-  <div>
-      Welcome to the App
+  <div id='app'>
+      Welcome to the Home
   </div>
 </template>
 <script>

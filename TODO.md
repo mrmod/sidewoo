@@ -12,9 +12,9 @@ rails g model BusinessGroupMember business_group:references business:references 
 rails g model PostMember post:references employee:references role:integer --force
 
 # Polymorphic types
-rails g model Location address:text city:text country:string province:string state:string postal:string locatable_id:bigint locatable_type:string --force
+rails g model Location name:text address:text city:text country:string province:string state:string postal:string locatable_id:bigint locatable_type:string --force
 rails g model Tag name:string value:string url:text taggable_id:bigint taggable_type:string --force
-rails g model Medium url:text mediumable_id:bigint mediumable_type:string --force
+rails g model Medium name:text url:text mediumable_id:bigint mediumable_type:string --force
 
 # Defaults and settings
 sed -i  -e 's/t\.integer :role$/t.integer :role, default: 0/' db/migrate/*_create_employees.rb
@@ -86,6 +86,9 @@ class Event < ApplicationRecord
   belongs_to :business
   belongs_to :parent, class_name: 'Event', optional: true
   has_many :childevents, class_name: 'Event', foreign_key: 'parent_id'
+  has_many :tags, as: :taggable
+  has_many :locations, as: :locatable
+  has_many :media, as: :mediumable
 end
 ```
 
@@ -154,9 +157,13 @@ belongs_to :employee
 
 ```
 business = Business.create! name: 'Business', address: '1 Address St. Place, CA 90210', phone: '123-456-7890', email: 'test@sidewoo.com'
+business.tags.create! name: 'BusinessRegion', value: 'Main'
+business.locations.create! address: '1 Downtown St.', city: 'Town', state: 'CA', postal: '90120'
+
 employee = Employee.create! name: 'Employee A', business:business
 
 event = Event.create! name: 'Event', theme: 'Event Theme', description: 'Description', business: business
+event.media.create! name: 'MainFlyer', value: 'HappyFlyer'
 
 post = Post.create! topic: 'Topic', text: 'Text', employee: employee
 post_member = PostMember.create! post: post, employee: employee, role: 0
@@ -166,4 +173,134 @@ comment_3 = Comment.create! text: 'Comment 3', post: post, comment: comment_2, e
 
 group = BusinessGroup.create! name: 'Group', description: 'Description'
 group_member = BusinessGroupMember.create! business_group: group, business:business
+```
+
+
+# Feature Controllers
+
+```
+rails g controller Home index --force
+rails g controller Events index --force
+rails g controller Groups index --force
+```
+# API Controllers
+
+## Business
+```
+rails g controller Api::V1::Businesses index create delete update--force
+```
+## Social
+```
+rails g controller Api::V1::Social index create delete update --force
+```
+## Event
+```
+rails g controller Api::V1::Events index create delete update --force
+```
+## Employee
+```
+rails g controller Api::V1::Employees index create delete update --force
+```
+## Post
+```
+rails g controller Api::V1::Posts index create delete update --force
+```
+## Comment
+```
+rails g controller Api::V1::Comments index create delete update --force
+```
+## BusinessGroup
+```
+rails g controller Api::V1::BusinessGroups index create delete update --force
+```
+## BusinessGroupMember
+```
+rails g controller Api::V1::BusinessGroupMembers index create delete --force
+```
+## PostMember
+```
+rails g controller Api::V1::PostMembers index create delete --force
+```
+## Location
+```
+rails g controller Api::V1::Locations index create delete update --force
+```
+## Tag
+```
+rails g controller Api::V1::Tags index create delete update --force
+```
+## Medium
+```
+rails g controller Api::V1::Media index create delete update --force
+```
+
+## All API Controllers
+```
+rails g controller Api::V1::Businesses index create delete update --force
+rails g controller Api::V1::Social index create delete update --force
+rails g controller Api::V1::Events index create delete update --force
+rails g controller Api::V1::Employees index create delete update --force
+rails g controller Api::V1::Posts index create delete update --force
+rails g controller Api::V1::Comments index create delete update --force
+rails g controller Api::V1::BusinessGroups index create delete update --force
+rails g controller Api::V1::BusinessGroupMembers index create delete --force
+rails g controller Api::V1::PostMembers index create delete --force
+rails g controller Api::V1::Locations index create delete update --force
+rails g controller Api::V1::Tags index create delete update --force
+rails g controller Api::V1::Media index create delete update --force
+```
+
+# Routes
+
+```
+Rails.application.routes.draw do
+
+  root to: 'home#index'
+  resources :events, only: [:index]
+  resources :groups, only: [:index]
+
+  # API
+  namespace :api do
+    resources :businesses, controller: 'v1/businesses' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :employees, controller: 'v1/employees' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :social, controller: 'v1/social' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :events, controller: 'v1/events' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :posts, controller: 'v1/posts' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :comments, controller: 'v1/comments' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :business_groups, controller: 'v1/business_groups' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :business_group_members, controller: 'v1/business_group_members'
+    resources :post_members, controller: 'v1/post_members'
+    resources :locations, controller: 'v1/locations'
+    resources :tags, controller: 'v1/tags'
+    resources :media, controller: 'v1/media'
+  end
+end
 ```

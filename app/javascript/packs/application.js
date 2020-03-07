@@ -19,11 +19,9 @@
 import Vue from 'vue'
 import App from '../components/App.vue'
 
-document.addEventListener('OMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(document.createElement('app'))
-    const app = new Vue({
-        el: 'app',
-        template: '<App />',
-        components: { App },
-    })
+    new Vue({
+        render: h => h(App),
+    }).$mount('#app')
 })

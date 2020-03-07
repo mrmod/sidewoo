@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
   end
 
   create_table "locations", force: :cascade do |t|
+    t.text "name"
     t.text "address"
     t.text "city"
     t.string "country"
@@ -90,6 +91,7 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
   end
 
   create_table "media", force: :cascade do |t|
+    t.text "name"
     t.text "url"
     t.bigint "mediumable_id"
     t.string "mediumable_type"

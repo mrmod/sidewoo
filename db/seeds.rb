@@ -6,9 +6,13 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 business = Business.create! name: 'Business', address: '1 Address St. Place, CA 90210', phone: '123-456-7890', email: 'test@sidewoo.com'
+business.tags.create! name: 'BusinessRegion', value: 'Main'
+business.locations.create! address: '1 Downtown St.', city: 'Town', state: 'CA', postal: '90120'
+
 employee = Employee.create! name: 'Employee A', business:business
 
 event = Event.create! name: 'Event', theme: 'Event Theme', description: 'Description', business: business
+event.media.create! name:'MainFlyer', url: 'MainFlyerURL'
 
 post = Post.create! topic: 'Topic', text: 'Text', employee: employee
 post_member = PostMember.create! post: post, employee: employee, role: 0

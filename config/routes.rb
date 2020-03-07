@@ -1,3 +1,50 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  root to: 'home#index'
+  resources :events, only: [:index]
+  resources :groups, only: [:index]
+
+  # API
+  namespace :api do
+    resources :businesses, controller: 'v1/businesses' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :employees, controller: 'v1/employees' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :social, controller: 'v1/social' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :events, controller: 'v1/events' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :posts, controller: 'v1/posts' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :comments, controller: 'v1/comments' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :business_groups, controller: 'v1/business_groups' do 
+      resources :tags, controller: 'v1/tags'
+      resources :locations, controller: 'v1/locations'
+      resources :media, controller: 'v1/media'
+    end
+    resources :business_group_members, controller: 'v1/business_group_members'
+    resources :post_members, controller: 'v1/post_members'
+    resources :locations, controller: 'v1/locations'
+    resources :tags, controller: 'v1/tags'
+    resources :media, controller: 'v1/media'
+  end
 end
