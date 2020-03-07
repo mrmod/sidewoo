@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  theme: MyText
+  description: MyText
+  start_time: 2020-03-05 07:46:25
+  end_time: 2020-03-05 07:46:25
+  parent_id: 
+  business: one
+
+two:
+  name: MyString
+  theme: MyText
+  description: MyText
+  start_time: 2020-03-05 07:46:25
+  end_time: 2020-03-05 07:46:25
+  parent_id: 
+  business: two

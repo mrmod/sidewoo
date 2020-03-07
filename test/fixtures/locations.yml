@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  address: MyText
+  city: MyText
+  country: MyString
+  province: MyString
+  state: MyString
+  postal: MyString
+  locatable_id: 
+  locatable_type: MyString
+
+two:
+  address: MyText
+  city: MyText
+  country: MyString
+  province: MyString
+  state: MyString
+  postal: MyString
+  locatable_id: 
+  locatable_type: MyString
