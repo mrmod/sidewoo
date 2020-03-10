@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
 
   root to: 'home#index'
-  resources :events, only: [:index]
-  resources :groups, only: [:index]
 
   # API
   namespace :api do
@@ -26,7 +24,8 @@ Rails.application.routes.draw do
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'
     end
-    resources :posts, controller: 'v1/posts' do 
+    resources :posts, controller: 'v1/posts' do
+      resources :comments, controller: 'v1/post_comments'
       resources :tags, controller: 'v1/tags'
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'

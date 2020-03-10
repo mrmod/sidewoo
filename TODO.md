@@ -248,6 +248,7 @@ rails g controller Api::V1::PostMembers index create delete --force
 rails g controller Api::V1::Locations index create delete update --force
 rails g controller Api::V1::Tags index create delete update --force
 rails g controller Api::V1::Media index create delete update --force
+rails g controller Api::V1::PostComments index --force
 ```
 
 # Routes
@@ -281,7 +282,8 @@ Rails.application.routes.draw do
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'
     end
-    resources :posts, controller: 'v1/posts' do 
+    resources :posts, controller: 'v1/posts' do
+      resources :comments, controller: 'v1/post_comments'
       resources :tags, controller: 'v1/tags'
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'
