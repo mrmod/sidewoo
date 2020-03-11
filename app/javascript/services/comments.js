@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {authorizedJSONHeaders} from './requests'
+import {authorizedJSONHeaders, railsErrorHandler} from './requests'
 const allCommentsURL = '/api/comments'
 const oneCommentURL = commentID => `/api/comments/${commentID}`
 
@@ -9,10 +9,7 @@ export const createComment = comment => axios.post(allCommentsURL, {comment}, au
       data: data,
       error: null,
   }))
-  .catch(error => ({
-      error: error,
-      data: null,
-  }))
+  .catch(railsErrorHandler)
 
 
 export const deleteComment = id => axios.delete(oneCommentURL(id), authorizedJSONHeaders)
@@ -21,7 +18,4 @@ export const deleteComment = id => axios.delete(oneCommentURL(id), authorizedJSO
       data: data,
       error: null,
   }))
-  .catch(error => ({
-      error: error,
-      data: null,
-  }))
+  .catch(railsErrorHandler)

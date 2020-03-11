@@ -14,7 +14,7 @@
       v-on:reloadComments='reloadComments'
       v-if='isCommentsLoaded'
       :comments='comments'
-      :post='id'/>
+      :post='id' />
   </div>
 </template>
 <script>
@@ -27,7 +27,7 @@ export default {
     // id, topic, text, private, employee_id, created_at, updated_a
     data: function() {
         return {
-            id: this.$route.params.id,
+            id: parseInt(this.$route.params.id),
             topic: '',
             text: '',
             private: true,

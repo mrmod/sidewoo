@@ -14,33 +14,13 @@ export default {
     name: 'AddComment',
     components: {Errors},
     props: {
-        post: String,
+        post: Number,
         comment: {type: String, required: false},
     },
     data: function() {
         return {
             text: '',
-            error: null
-        }
-    },
-    computed: {
-        hasErrors: function() {
-            if (this.error) {
-                return true
-            }
-            if (this.error instanceof Array && this.error.length > 0) {
-                return true
-            }
-            return false
-        },
-        errors: function() {
-            if (this.error) {
-                if (this.error instanceof Array) {
-                    return this.error
-                }
-                return [this.error]
-            }
-            return []
+            errors: null
         }
     },
     methods: {
@@ -56,7 +36,7 @@ export default {
                 this.text = ''
                 this.$emit('commented')
             })
-            .catch(error => this.error = error.error)
+            .catch(error => this.errors = error.error)
         }
     }
 }

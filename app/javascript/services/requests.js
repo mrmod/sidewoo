@@ -10,3 +10,16 @@ export const authorizedJSONHeaders = {
         'authenticity_token': getCSRFToken(),
     })
 }
+
+export const railsErrorHandler = error => {
+    if (error.response) {
+      throw {
+          error: error.response.data,
+          data: null,
+      }
+  }
+  throw {
+      error: [{apiRequestError: error.message}],
+      data: null,
+  }
+}

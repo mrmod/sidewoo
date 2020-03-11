@@ -16,9 +16,12 @@
 // const imagePath = (name) => images(name, true)
 
 import Vue from 'vue/dist/vue.esm' // https://vuejs.org/v2/guide/installation.html#Explanation-of-Different-Builds
+
 import VueRouter from 'vue-router'
 import Home from '../components/Home.vue'
+import Posts from '../components/Posts.vue'
 import ShowPost from '../components/ShowPost.vue'
+import Events from '../components/Events.vue'
 
 // Material
 import {MdCard, MdButton, MdField} from 'vue-material/dist/components'
@@ -37,12 +40,12 @@ Vue.prototype.$currentUser = {
     name: 'Jane',
     email: 'Jane@SideWoo.com',
 }
-// CSRF Token
-Vue.prototype.$csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 
 const routes = [
-    { path: '/', name: 'Home', component: Home },
-    { path: '/posts/:id', name: 'ShowPost', component: ShowPost }, 
+    { path: '/', name: 'Home', component: Home},
+    { path: '/posts', name: 'Posts', component: Posts },
+    { path: '/posts/:id', name: 'ShowPost', component: ShowPost },
+    { path: '/events', name: 'Events', component: Events },
 ]
 const router = new VueRouter({routes})
 

@@ -12,7 +12,7 @@ export default {
     components: {Comment, AddComment},
     props: {
         comments: Array,
-        post: String,
+        post: Number,
     },
     methods: {
         commentAdded: function() {

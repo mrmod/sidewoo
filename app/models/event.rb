@@ -1,4 +1,8 @@
 class Event < ApplicationRecord
+  validates :name, presence: true
+  validates :description, length: {minimum: 2}
+  validates :start_time, presence: true # TODO: Validate it's in the future
+
   belongs_to :business
   belongs_to :parent, class_name: 'Event', optional: true
   has_many :childevents, class_name: 'Event', foreign_key: 'parent_id'
