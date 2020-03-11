@@ -1,6 +1,6 @@
 <template>
   <div id='posts'>
-      <PostList :posts='posts' />
+      <PostList v-on:reloadPosts='reloadPosts' :posts='posts' />
   </div>
 </template>
 <script>
@@ -15,7 +15,12 @@ export default {
         }
     },
    created: function() {
-       getAllPosts().then(r => this.posts = r.data)
+       this.reloadPosts()
+   },
+   methods: {
+       reloadPosts: function() {
+            getAllPosts().then(r => this.posts = r.data)
+       }
    }
 }
 </script>

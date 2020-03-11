@@ -1,8 +1,11 @@
 class Post < ApplicationRecord
-  belongs_to :employee
-  has_many :comments
+  validates :topic, presence: true
+  validates :text, presence: true
   
-  has_many :post_members
+  belongs_to :employee
+  has_many :comments, dependent: :destroy # remove comments on deletion
+  
+  has_many :post_members, dependent: :destroy # remove memberships on deletion
   has_many :employees, through: :post_members
   
   has_many :tags, as: :taggable

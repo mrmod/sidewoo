@@ -24,7 +24,7 @@ import ShowPost from '../components/ShowPost.vue'
 import Events from '../components/Events.vue'
 
 // Material
-import {MdCard, MdButton, MdField} from 'vue-material/dist/components'
+import {MdCard, MdButton, MdField, MdSwitch} from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
@@ -33,6 +33,7 @@ Vue.use(VueRouter)
 Vue.use(MdCard)
 Vue.use(MdButton)
 Vue.use(MdField)
+Vue.use(MdSwitch)
 // Static Employee
 Vue.prototype.$currentUser = {
     employee_id: 1,

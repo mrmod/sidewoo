@@ -1,10 +1,16 @@
 <template>
     <div id="post">
         <md-card md-with-hover>
-            <md-card-header>
-                <div class="md-title">{{ post.topic }}</div>
-            </md-card-header>
-            <md-card-content>{{ post.text }} </md-card-content>
+                <md-card-header>
+                    <router-link tag="span" class="no-decoration" :to='showPost'>
+                        <div class="md-title">
+                            {{ post.topic }}
+                        </div>
+                    </router-link>
+                </md-card-header>
+            <md-card-content>
+                {{ post.text }}
+            </md-card-content>
             <md-card-actions>
                 <md-button :to='showPost'>
                     Comment <i class="material-icons">chat_bubble_outline</i>{{commentCount}}
@@ -48,11 +54,14 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
+<style  scoped>
 .md-card {
     width: 320px;
 }
 .md-action {
     justify-content: right;
+}
+.no-decoration {
+    text-decoration: none;
 }
 </style>

@@ -9,6 +9,9 @@
             <div class="md-title">{{ topic }}</div>
         </md-card-header>
         <md-card-content>{{text}}</md-card-content>
+        <md-card-actions v-if='isEditor'>
+            <md-button @click='deletePost'>Delete</md-button>
+        </md-card-actions>
     </md-card>
     <CommentList
       v-on:reloadComments='reloadComments'
@@ -18,7 +21,7 @@
   </div>
 </template>
 <script>
-import {getOnePost, getPostComments} from '../services/posts'
+import {getOnePost, getPostComments, deletePost} from '../services/posts'
 import CommentList from './CommentList'
 export default {
     name: 'ShowPost',
@@ -36,7 +39,7 @@ export default {
             updated: new Date(),
             comments: [],
             isPostLoaded: false,
-            isCommentsLoaded: false
+            isCommentsLoaded: false,
         }
     },
     created: function() {
@@ -54,12 +57,20 @@ export default {
             this.isCommentsLoaded = true
         })
     },
+    computed: {
+        isEditor: function() {
+            return this.employee === this.$currentUser.employee_id
+        }
+    },
     methods: {
         reloadComments: function() {
             getPostComments(this.id).then(r => this.comments = r.data)
         },
-        deleteComment: function(id) {
-            console.log(`deleted comment ${id}`)
+        deletePost: function() {
+            deletePost(this.id)
+              .then(() => {
+                  this.$router.replace('/posts')
+              })
         }
     }
 }

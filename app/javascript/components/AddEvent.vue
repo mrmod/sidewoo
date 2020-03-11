@@ -51,8 +51,18 @@ export default {
             // TODO: Redirect to new event to allow further modification
             createEvent(event).then(() => {
                 this.$emit('eventAdded')
+                this.initializeData()
             })
             .catch(error => this.errors = error.error)
+        },
+        initializeData: function() {
+            this.name = ''
+            this.theme = ''
+            this.description = ''
+            this.startTime = new Date()
+            this.endTime = new Date()
+            this.showAddEvent = false
+            this.errors = null
         },
         toggleShowAddEvent: function() {
             this.showAddEvent = !this.showAddEvent
