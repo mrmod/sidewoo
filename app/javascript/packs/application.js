@@ -22,18 +22,26 @@ import Home from '../components/Home.vue'
 import Posts from '../components/Posts.vue'
 import ShowPost from '../components/ShowPost.vue'
 import Events from '../components/Events.vue'
+import ShowEvent from '../components/ShowEvent.vue'
 
 // Material
-import {MdCard, MdButton, MdField, MdSwitch} from 'vue-material/dist/components'
+import {
+    MdCard, MdButton, MdField, MdSwitch, MdDivider
+} from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
+// DatetimePicker from Chronotruck
+import VueCtkDateTimePicker from 'vue-ctk-date-time-picker'
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
+Vue.component('DatetimePicker', VueCtkDateTimePicker)
 // Configure thingies
 Vue.use(VueRouter)
 Vue.use(MdCard)
 Vue.use(MdButton)
 Vue.use(MdField)
 Vue.use(MdSwitch)
+Vue.use(MdDivider)
 // Static Employee
 Vue.prototype.$currentUser = {
     employee_id: 1,
@@ -47,6 +55,7 @@ const routes = [
     { path: '/posts', name: 'Posts', component: Posts },
     { path: '/posts/:id', name: 'ShowPost', component: ShowPost },
     { path: '/events', name: 'Events', component: Events },
+    { path: '/events/:id', name: 'ShowEvent', component: ShowEvent },
 ]
 const router = new VueRouter({routes})
 

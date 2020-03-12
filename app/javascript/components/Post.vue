@@ -21,6 +21,7 @@
 </template>
 <script>
 import {getPostComments} from '../services/posts'
+
 export default {
     name: 'Post',
     components: {},

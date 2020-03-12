@@ -5,6 +5,17 @@ class Api::V1::EventsController < ApplicationController
     end
   end
 
+  def show
+    @event = Event.find_by_id params[:id]
+    if @event.present?
+      respond_to do |format|
+        format.json { render json: @event}
+      end
+    else
+      render json: {'notFound': params[:id]}, status: 404
+    end
+  end
+
   def create
     @event = Event.create valid_params
     if @event.invalid?
@@ -15,6 +26,18 @@ class Api::V1::EventsController < ApplicationController
       respond_to do |format|
         format.json { render json: @event }
       end
+    end
+  end
+
+  def update
+    begin
+      @event = Event.update params[:id], valid_params
+      respond_to do |format|
+        format.json { render json: @event }
+      end
+    rescue ActiveModel::ForbiddenAttributesError => e
+      puts "Error: #{e} #{params}"
+      render json: {'notFound': params[:id], status: 404 }
     end
   end
 

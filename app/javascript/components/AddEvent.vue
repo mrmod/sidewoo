@@ -14,6 +14,18 @@
           <md-textarea v-model='description' placeholder='Describe the event'>
           </md-textarea>
       </md-field>
+      <DatetimePicker
+        :id='"start_time"'
+        :label='"Start time"'
+        :format='"YYYY-MM-DD h:mm a"'
+        v-model='start_time'
+      />
+      <DatetimePicker
+        :id='"end_time"'
+        :label='"End time"'
+        :format='"YYYY-MM-DD h:mm a"'
+        v-model='end_time'
+      />
       <md-button class="md-raised md-primary" @click='createEvent'>
           Save
       </md-button>
@@ -26,13 +38,27 @@ import Errors from './Errors.vue'
 export default {
     name: 'AddEvent',
     components: {Errors},
+    props: {
+        event: {type: Object, required: false}
+    },
     data: function() {
+        if (this.event) {
+            return {
+                name: this.event.name,
+                theme: this.event.theme,
+                description: this.event.description,
+                start_time: this.event.start_time,
+                end_time: this.event.end_time,
+                business_id: this.event.business_id,
+                parent_id: this.event.parent_id,
+            }
+        }
         return {
             name: '',
             theme: '',
             description: '',
-            startTime: new Date(),
-            endTime: new Date(),
+            start_time: '',
+            end_time: '',
             business_id: this.$currentUser.business_id,
             showAddEvent: false,
             errors: null,
@@ -44,8 +70,8 @@ export default {
                 name: this.name,
                 theme: this.theme,
                 description: this.description,
-                start_time: this.startTime,
-                end_time: this.endTime,
+                start_time: this.start_time,
+                end_time: this.end_time,
                 business_id: this.business_id,
             }
             // TODO: Redirect to new event to allow further modification
@@ -59,8 +85,8 @@ export default {
             this.name = ''
             this.theme = ''
             this.description = ''
-            this.startTime = new Date()
-            this.endTime = new Date()
+            this.start_time = ''
+            this.end_time = ''
             this.showAddEvent = false
             this.errors = null
         },

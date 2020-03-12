@@ -27,3 +27,22 @@ export const deleteEvent = id => axios.delete(oneEventUrl(id), authorizedJSONHea
       error: null,
   }))
   .catch(railsErrorHandler)
+
+export const getOneEvent = id => axios.get(oneEventUrl(id), authorizedJSONHeaders)
+  .then(r => r.data)
+  .then( data => ({
+    data: data,
+    error: null,
+  }))
+  .catch(railsErrorHandler)
+export const updateEvent = (id, event) => axios.put(
+    oneEventUrl(id),
+    {event},
+    authorizedJSONHeaders
+  )
+  .then(r => r.data)
+  .then( data => ({
+    data: data,
+    error: null,
+  }))
+  .catch(railsErrorHandler)

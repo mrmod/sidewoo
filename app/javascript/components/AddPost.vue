@@ -20,7 +20,18 @@ import Errors from './Errors.vue'
 export default {
     name: 'AddPost',
     components: {Errors},
+    props: {
+        post: {type: Object, required: false},
+    },
     data: function() {
+        if (this.post) {
+            return {
+                employee_id: this.post.employee_id,
+                private: this.post.private,
+                text: this.post.text,
+                topic: this.post.topic,
+            }
+        }
         return {
             employee_id: this.$currentUser.employee_id,
             private: false,
