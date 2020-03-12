@@ -1,26 +1,29 @@
 <template>
   <div id="show-event">
-      <Event :event='event' :isEditable='true' />
+      <Event :event='event' v-if='inViewMode' v-on:changeMode='changeMode' />
+      <EditableEvent :event='event' v-if='!inViewMode' v-on:changeMode='changeMode' v-on:updateEvent='updateEvent' />
   </div>
 </template>
 <script>
 import Event from './Event'
-import {getOneEvent} from '../services/events'
+import EditableEvent from './EditableEvent.vue'
+import {getOneEvent, updateEvent} from '../services/events'
 export default {
     name: 'ShowEvent',
-    components: {Event},
+    components: {EditableEvent, Event},
     data: function() {
         return {
             id: parseInt(this.$route.params.id),
             name: '',
             theme: '',
             description: '',
-            start_time: new Date(),
-            end_time: new Date(),
+            start_time: '',
+            end_time: '',
             parent_id: null,
             business_id: null,
             created_at: new Date(),
             updated_at: new Date(),
+            inViewMode: true,
         }
     },
     computed: {
@@ -52,6 +55,17 @@ export default {
             this.created_at = event.created_at
             this.updated_at = event.updated_at
         })
+    },
+    methods: {
+        changeMode: function() {
+            console.log("toggling")
+            this.inViewMode = !this.inViewMode
+        },
+        updateEvent: function(event) {
+            updateEvent(event.id, event).then(r => {
+                this.$emit('eventUpdated')
+            })
+        }
     }
 }
 </script>

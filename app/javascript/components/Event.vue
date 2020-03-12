@@ -23,7 +23,8 @@
       </md-card-content>
       
       <md-card-actions>
-        <md-button class='md-raised md-primary' @click='updateEvent' v-if='isEditor'>Save</md-button>
+
+        <md-button class='md-primary' @click='changeMode' v-if='isEditable && isEditor'>Edit</md-button>
         <md-button class='md-accent' @click='deleteEvent' v-if='isEditor'>Delete</md-button>
       </md-card-actions>
     </md-card>
@@ -37,7 +38,7 @@ export default {
     name: 'Event',
     props: {
       event: Object,
-      isEditable: {default: false, type: Boolean},
+      isEditable: {default: true, type: Boolean},
     },
     data: function() {
       return {
@@ -66,19 +67,9 @@ export default {
           this.$router.replace('/events')
         })
       },
-      updateEvent: function() {
-        const event = {
-          id: this.event.id,
-          start_time: this.start_time,
-          end_time: this.end_time,
-          name: this.event.name,
-          theme: this.event.theme,
-          description: this.event.description,
-        }
-        updateEvent(this.event.id, event).then(r => {
-          this.$emit('eventUpdated')
-        })
-      }
+      changeMode: function() {
+        this.$emit('changeMode')
+      },
     }
 }
 </script>
