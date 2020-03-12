@@ -49,3 +49,15 @@ export const deletePost = (postId) => axios.delete(
     error: null
   }))
   .catch(railsErrorHandler)
+
+export const updatePost = (id, post) => axios.put(
+    onePostURL(id),
+    {post},
+    authorizedJSONHeaders
+  )
+  .then(r => r.data)
+  .then(data => ({
+    data: data,
+    error: null
+  }))
+  .catch(railsErrorHandler)

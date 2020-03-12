@@ -37,6 +37,7 @@ class Api::V1::EventsController < ApplicationController
       end
     rescue ActiveModel::ForbiddenAttributesError => e
       puts "Error: #{e} #{params}"
+      
       render json: {'notFound': params[:id], status: 404 }
     end
   end
@@ -57,6 +58,7 @@ class Api::V1::EventsController < ApplicationController
   private
     def valid_params
       params.require(:event).permit(
+        :id,
         :name,
         :theme,
         :description,

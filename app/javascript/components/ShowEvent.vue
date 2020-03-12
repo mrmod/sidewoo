@@ -58,12 +58,13 @@ export default {
     },
     methods: {
         changeMode: function() {
-            console.log("toggling")
             this.inViewMode = !this.inViewMode
         },
         updateEvent: function(event) {
             updateEvent(event.id, event).then(r => {
                 this.$emit('eventUpdated')
+                this.changeMode()
+                this.$router.go() // Optional update the event from client data
             })
         }
     }

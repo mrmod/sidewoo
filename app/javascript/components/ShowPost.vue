@@ -1,18 +1,11 @@
 <template>
   <div id="post">
-    <md-card v-if='!isPostLoaded'>
-        <md-card-header>blurry title</md-card-header>
-        <md-card-content>blurry content</md-card-content>
-    </md-card>
-    <md-card v-if='isPostLoaded'>
-        <md-card-header>
-            <div class="md-title">{{ topic }}</div>
-        </md-card-header>
-        <md-card-content>{{text}}</md-card-content>
-        <md-card-actions v-if='isEditor'>
-            <md-button @click='deletePost'>Delete</md-button>
-        </md-card-actions>
-    </md-card>
+    <Post :post='post' v-if='inViewMode' v-on:changeMode='changeMode' />
+    <EditablePost
+        :post='post' v-if='!inViewMode'
+        v-on:changeMode='changeMode'
+        v-on:updatePost='updatePost' />
+
     <CommentList
       v-on:reloadComments='reloadComments'
       v-if='isCommentsLoaded'
@@ -21,11 +14,13 @@
   </div>
 </template>
 <script>
-import {getOnePost, getPostComments, deletePost} from '../services/posts'
+import {getOnePost, getPostComments, updatePost} from '../services/posts'
+import Post from './Post.vue'
+import EditablePost from './EditablePost.vue'
 import CommentList from './CommentList'
 export default {
     name: 'ShowPost',
-    components: {CommentList},
+    components: {CommentList, EditablePost, Post},
 
     // id, topic, text, private, employee_id, created_at, updated_a
     data: function() {
@@ -34,12 +29,13 @@ export default {
             topic: '',
             text: '',
             private: true,
-            employee: 0,
-            created: new Date(),
-            updated: new Date(),
+            employee_id: 0,
+            created_at: new Date(),
+            updated_at: new Date(),
             comments: [],
             isPostLoaded: false,
             isCommentsLoaded: false,
+            inViewMode: true
         }
     },
     created: function() {
@@ -47,9 +43,9 @@ export default {
             this.topic = r.data.topic
             this.text = r.data.text
             this.private = r.data.private
-            this.employee = r.data.employee_id
-            this.created = r.data.created_at
-            this.updated = r.data.updated_at
+            this.employee_id = r.data.employee_id
+            this.created_at= r.data.created_at
+            this.updated_at = r.data.updated_at
             this.isPostLoaded = true
         })
         getPostComments(this.id).then(r => {
@@ -58,19 +54,30 @@ export default {
         })
     },
     computed: {
-        isEditor: function() {
-            return this.employee === this.$currentUser.employee_id
+        post: function() {
+            return {
+                id: this.id,
+                topic: this.topic,
+                text: this.text,
+                private: this.private,
+                employee_id: this.employee_id,
+                created_at: this.created_at,
+                updated_at: this.updated_at,
+            }
         }
     },
     methods: {
         reloadComments: function() {
             getPostComments(this.id).then(r => this.comments = r.data)
         },
-        deletePost: function() {
-            deletePost(this.id)
-              .then(() => {
-                  this.$router.replace('/posts')
-              })
+        updatePost: function(post) {
+            updatePost(post.id, post).then(() => {
+                this.changeMode()
+                this.$router.go() // reload the data
+            })
+        },
+        changeMode: function() {
+            this.inViewMode = !this.inViewMode
         }
     }
 }

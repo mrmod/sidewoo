@@ -1,7 +1,7 @@
 <template>
     <div id="post-list">
         <AddPost v-on:addedPost='$emit("reloadPosts")' />
-        <Post :post='post' v-for='post in posts' :key='post.id' />
+        <Post :post='post' v-for='post in posts' :key='post.id' :isEditable='false' />
     </div>
 </template>
 <script>

@@ -32,6 +32,15 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def update
+    begin
+      @post = Post.update params[:id], valid_params
+      respond_to do |format|
+        format.json { render json: @post }
+      end
+    rescue ActiveModel::ForbiddenAttributesError => e
+      puts "Error: #{e} #{params}"
+      render json: {'notFound': params[:id], status: 404 }
+    end
   end
 
   private

@@ -12,21 +12,29 @@
                 {{ post.text }}
             </md-card-content>
             <md-card-actions>
-                <md-button :to='showPost'>
+
+                <md-button :to='showPost' v-if='!isEditable'>
                     Comment <i class="material-icons">chat_bubble_outline</i>{{commentCount}}
+                </md-button>
+                <md-button class='md-primary' @click='changeMode' v-if='isEditable && isEditor'>
+                    Edit
+                </md-button>
+                <md-button class='md-accent' @click='deletePost' v-if='isEditable && isEditor'>
+                    Delete
                 </md-button>
             </md-card-actions>
         </md-card>
     </div>
 </template>
 <script>
-import {getPostComments} from '../services/posts'
+import {getPostComments, deletePost} from '../services/posts'
 
 export default {
     name: 'Post',
     components: {},
     props: {
         post: Object, // id, topic, text, private, employee_id, created_at, updated_at
+        isEditable: {default: true, type: Boolean},
     },
     data: () => {
         return {
@@ -47,10 +55,20 @@ export default {
         },
         showPost: function() {
             return {name: 'ShowPost', params: {id: this.post.id}}
+        },
+        isEditor: function() {
+            return this.$currentUser.employee_id === this.post.employee_id
         }
     },
     methods: {
-        viewPost: function() {
+        changeMode: function() {
+            this.$emit('changeMode')
+        },
+        deletePost: function() {
+            deletePost(this.post.id).then(() => {
+                this.$emit('postDeleted')
+                this.$router.replace('/posts')
+            })
         }
     }
 }

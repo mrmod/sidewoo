@@ -1,25 +1,15 @@
 <template>
   <div id="add-post">
       <span class="md-display-1" @click='toggleShowAddPost'>Create a new post</span>
-      <div v-if='showAddPost'>
-        <Errors :errors='errors' />
-        <md-field>
-            <md-input placeholder='What is this post about?' v-model='topic'></md-input>
-        </md-field>
-        <md-field>
-            <md-input placeholder='Describe what you are talking about' v-model='text'></md-input>
-        </md-field>
-        <md-switch v-model='private'>Private?</md-switch>
-        <md-button @click='createPost'>Save</md-button>
-      </div>
+      <EditablePost v-if='showAddPost' v-on:createPost='createPost' :post='post' />
   </div>
 </template>
 <script>
 import {createPost} from '../services/posts'
-import Errors from './Errors.vue'
+import EditablePost from './EditablePost.vue'
 export default {
     name: 'AddPost',
-    components: {Errors},
+    components: {EditablePost},
     props: {
         post: {type: Object, required: false},
     },
@@ -42,15 +32,10 @@ export default {
         }
     },
     methods: {
-        createPost: function() {
-            const post = {
-                employee_id: this.employee_id,
-                private: this.private,
-                text: this.text,
-                topic: this.topic,
-            }
+        createPost: function(post) {
             createPost(post).then(r => {
                 this.$emit('addedPost')
+                this.toggleShowAddPost()
                 this.initializeData()
             })
             .catch(error => this.errors = error.error)
