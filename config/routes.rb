@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :media, controller: 'v1/media'
     end
     resources :events, controller: 'v1/events' do 
+      resources :media, controller: 'v1/event_media'
       resources :tags, controller: 'v1/tags'
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'

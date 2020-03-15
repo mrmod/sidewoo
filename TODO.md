@@ -14,7 +14,7 @@ rails g model PostMember post:references employee:references role:integer --forc
 # Polymorphic types
 rails g model Location name:text address:text city:text country:string province:string state:string postal:string locatable_id:bigint locatable_type:string --force
 rails g model Tag name:string value:string url:text taggable_id:bigint taggable_type:string --force
-rails g model Medium name:text url:text mediumable_id:bigint mediumable_type:string --force
+rails g model Medium name:text url:text mediumable_id:bigint mediumable_type:string content_type:string --force
 
 # Defaults and settings
 sed -i  -e 's/t\.integer :role$/t.integer :role, default: 0/' db/migrate/*_create_employees.rb

@@ -46,3 +46,34 @@ export const updateEvent = (id, event) => axios.put(
     error: null,
   }))
   .catch(railsErrorHandler)
+
+const eventMediaUrl = id => `${oneEventUrl(id)}/media`
+export const addMedia = (id, mediaFile) => {
+  const data = new FormData()
+  data.append('file', mediaFile)
+  return axios.post(
+    eventMediaUrl(id),
+    data,
+    Object.assign({}, authorizedJSONHeaders, {
+      "Content-Type": `multipart/form-data`,
+      "Content-Length": `${mediaFile.size}`,
+    })
+  )
+  .then(r => r.data)
+  .then(data => ({
+    data: data,
+    error: null,
+  }))
+  .catch(railsErrorHandler)
+}
+
+export const allMedia = id => axios.get(
+    eventMediaUrl(id),
+    authorizedJSONHeaders
+  )
+  .then(r => r.data)
+  .then(data => ({
+    data: data, 
+    error: null,
+  }))
+  .catch(railsErrorHandler)
