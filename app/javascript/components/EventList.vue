@@ -6,6 +6,7 @@
         v-for='event in events'
         :key='event.id'
         :event='event'
+        :loadMedia='true'
         :isEditable='false'
       />
   </div>
@@ -18,6 +19,6 @@ export default {
     components: {AddEvent, Event},
     props: {
         events: Array, // id, name, theme, description, start/end_time, parent/business_id
-    }
+    },
 }
 </script>

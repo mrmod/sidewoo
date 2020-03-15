@@ -27,7 +27,6 @@ ul {
     white-space: nowrap;
 }
 ul > li {
-    
     display: inline-block;
 
 }

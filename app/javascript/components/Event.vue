@@ -20,10 +20,9 @@
             </span>
           </div>
         </div>
+        <EditableMedia :media='mediaList' :model_id='event.id' :model_type='"Event"' />
       </md-card-content>
-      
       <md-card-actions>
-
         <md-button class='md-primary' @click='changeMode' v-if='isEditable && isEditor'>Edit</md-button>
         <md-button class='md-accent' @click='deleteEvent' v-if='isEditor'>Delete</md-button>
       </md-card-actions>
@@ -31,21 +30,30 @@
   </div>
 </template>
 <script>
-import {deleteEvent, updateEvent} from '../services/events'
+import {deleteEvent, updateEvent, allMedia} from '../services/events'
 import {parseDate} from '../services/dates'
-
+import EditableMedia from './EditableMedia.vue'
 export default {
     name: 'Event',
+    components: {EditableMedia},
     props: {
       event: Object,
+      media: {default: () => ([]), type: Array},
       isEditable: {default: true, type: Boolean},
+      loadMedia: {default: false, type: Boolean},
     },
     data: function() {
       return {
         isEditor: true,
+        mediaList: this.media,
         start_time: this.event.start_time,
         end_time: this.event.end_time,
       }
+    },
+    created: function() {
+        if (this.loadMedia) {
+            allMedia(this.event.id).then(r => this.mediaList = r.data)
+        }
     },
     computed: {
       showEvent: function() {

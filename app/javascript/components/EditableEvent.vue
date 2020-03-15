@@ -11,6 +11,13 @@
         <md-textarea v-model='description' placeholder='Describe the event'>
         </md-textarea>
     </md-field>
+    <EditableMedia
+      :media='media'
+      :isEditable='true'
+      :model_id='id'
+      :model_type='"Event"'
+      v-on:addMedia='addMedia'
+      />
     <DatetimePicker
     :id='"start_time"'
     :label='"Start time"'
@@ -32,13 +39,15 @@
   </div>
 </template>
 <script>
-import {createEvent} from '../services/events'
+import {createEvent, addMedia} from '../services/events'
 import Errors from './Errors.vue'
+import EditableMedia from './EditableMedia.vue'
 export default {
     name: 'AddEvent',
-    components: {Errors},
+    components: {EditableMedia, Errors},
     props: {
-        event: {type: Object, required: false}
+        event: {type: Object, required: false},
+        media: Array,
     },
     data: function() {
         if (this.event) {
@@ -105,6 +114,11 @@ export default {
         cancelCreate: function() {
             this.toggleShowAddEvent()
             this.$emit('changeMode')
+        },
+        addMedia: function(fileList) {
+            addMedia(this.id, fileList[0]).then(r => {
+                this.$emit('addedMedia', r.data.media)
+            })
         }
     }
 }
