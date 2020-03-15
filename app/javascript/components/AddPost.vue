@@ -1,7 +1,12 @@
 <template>
   <div id="add-post">
-      <span class="md-display-1" @click='toggleShowAddPost'>Create a new post</span>
-      <EditablePost v-if='showAddPost' v-on:createPost='createPost' :post='post' />
+      <span class="md-display-1"
+        @click='toggleShowAddPost'>Create a new post</span>
+      <EditablePost
+        v-if='showAddPost'
+        v-on:createPost='createPost'
+        v-on:changeMode='toggleShowAddPost'
+        :post='post' />
   </div>
 </template>
 <script>
@@ -20,6 +25,7 @@ export default {
                 private: this.post.private,
                 text: this.post.text,
                 topic: this.post.topic,
+                showAddPost: false,
             }
         }
         return {

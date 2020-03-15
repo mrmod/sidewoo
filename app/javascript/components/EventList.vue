@@ -1,6 +1,8 @@
 <template>
   <div id="event-list">
-      <AddEvent v-on:eventAdded='$emit("eventAdded")' />
+      <AddEvent
+        :event='newEvent'
+        v-on:eventAdded='$emit("eventAdded")' />
       <Event
         v-on:eventDeleted='$emit("eventDeleted")'
         v-for='event in events'
@@ -20,5 +22,19 @@ export default {
     props: {
         events: Array, // id, name, theme, description, start/end_time, parent/business_id
     },
+    computed: {
+      newEvent: function() {
+        return {
+            name: '',
+            theme: '',
+            description: '',
+            start_time: '',
+            end_time: '',
+            business_id: this.$currentUser.business_id,
+            showAddEvent: false,
+            errors: null,
+        }
+      }
+    }
 }
 </script>

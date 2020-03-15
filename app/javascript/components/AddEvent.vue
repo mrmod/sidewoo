@@ -1,7 +1,11 @@
 <template>
   <div id="add-event">
     <span class="md-display-1" @click='toggleShowAddEvent'>Create a new event</span>
-    <EditableEvent v-if='showAddEvent' :event='event' v-on:createEvent='createEvent'/>
+    <EditableEvent
+      v-if='showAddEvent'
+      :event='event'
+      v-on:createEvent='createEvent'
+      v-on:changeMode='toggleShowAddEvent' />
   </div>
 </template>
 <script>
@@ -25,6 +29,7 @@ export default {
                 business_id: this.event.business_id,
                 parent_id: this.event.parent_id,
                 errors: null,
+                showAddEvent: false,
             }
         }
         return {

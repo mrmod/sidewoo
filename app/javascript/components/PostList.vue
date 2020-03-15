@@ -1,6 +1,6 @@
 <template>
     <div id="post-list">
-        <AddPost v-on:addedPost='$emit("reloadPosts")' />
+        <AddPost :post='newPost' v-on:addedPost='$emit("reloadPosts")' />
         <Post
           :loadMedia='true'
           :post='post'
@@ -18,8 +18,14 @@ export default {
         posts: Array,
     },
     components: { AddPost, Post },
-    data: () => {
-        return {
+    computed: {
+        newPost: function() {
+            return {
+                employee_id: this.$currentUser.employee_id,
+                private: false,
+                text: '',
+                topic: '',
+            }
         }
     }
 }
