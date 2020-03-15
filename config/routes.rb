@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     end
     resources :posts, controller: 'v1/posts' do
       resources :comments, controller: 'v1/post_comments'
+      resources :media, controller: 'v1/post_media'
       resources :tags, controller: 'v1/tags'
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'

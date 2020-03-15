@@ -8,6 +8,13 @@
         <md-input placeholder='Describe what you are talking about' v-model='text'></md-input>
     </md-field>
     <md-switch v-model='private'>Private?</md-switch>
+    <EditableMedia
+      :isEditable='true'
+      :media='media'
+      v-on:addMedia='addMedia'
+      :model_id='id'
+      :model_type='"Post"'
+      />
     <md-button class="md-raised md-primary" @click='savePost'>Save</md-button>
     <md-button class="md-accent" @click='cancel'>
       Cancel
@@ -15,12 +22,15 @@
   </div>
 </template>
 <script>
+import {addMedia} from '../services/posts'
 import Errors from './Errors.vue'
+import EditableMedia from './EditableMedia.vue'
 export default {
   name: 'EditablePost',
-  components: {Errors},
+  components: {EditableMedia, Errors},
   props: {
     post: {type: Object, required: false},
+    media: {type: Array, default: () => ([])},
   },
   data: function() {
     if (this.post) {
@@ -59,6 +69,11 @@ export default {
     },
     cancel: function() {
       this.$emit('changeMode')
+    },
+    addMedia: function(fileList) {
+        addMedia(this.id, fileList[0]).then(r => {
+            this.$emit('addedMedia', r.data.media)
+        })
     }
   }
 }

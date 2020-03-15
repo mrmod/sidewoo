@@ -1,10 +1,19 @@
 <template>
   <div id="post">
-    <Post :post='post' v-if='inViewMode' v-on:changeMode='changeMode' />
+    <Post
+      :post='post'
+      :loadMedia='true'
+      :media='media'
+      v-if='inViewMode'
+      v-on:changeMode='changeMode' />
     <EditablePost
-        :post='post' v-if='!inViewMode'
+        :post='post'
+        :media='media'
+        v-if='!inViewMode'
         v-on:changeMode='changeMode'
-        v-on:updatePost='updatePost' />
+        v-on:updatePost='updatePost'
+        v-on:addedMedia='addedMedia'
+        />
 
     <CommentList
       v-on:reloadComments='reloadComments'
@@ -14,7 +23,7 @@
   </div>
 </template>
 <script>
-import {getOnePost, getPostComments, updatePost} from '../services/posts'
+import {getOnePost, getPostComments, updatePost, allMedia} from '../services/posts'
 import Post from './Post.vue'
 import EditablePost from './EditablePost.vue'
 import CommentList from './CommentList'
@@ -33,6 +42,7 @@ export default {
             created_at: new Date(),
             updated_at: new Date(),
             comments: [],
+            media: [],
             isPostLoaded: false,
             isCommentsLoaded: false,
             inViewMode: true
@@ -52,6 +62,7 @@ export default {
             this.comments = r.data
             this.isCommentsLoaded = true
         })
+        allMedia(this.id).then(r => this.media = r.data)
     },
     computed: {
         post: function() {
@@ -78,6 +89,9 @@ export default {
         },
         changeMode: function() {
             this.inViewMode = !this.inViewMode
+        },
+        addedMedia: function(media) {
+            this.media.push(media)
         }
     }
 }

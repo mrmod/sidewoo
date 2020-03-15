@@ -2,7 +2,7 @@ import axios from 'axios'
 import {authorizedJSONHeaders, railsErrorHandler} from './requests'
 
 const allPostsURL = '/api/posts'
-const onePostURL = postID => `${allPostsURL}/${postID}`
+const onePostUrl = postID => `${allPostsURL}/${postID}`
 const postCommentsURL = postID => `${allPostsURL}/${postID}/comments`
 
 export const getAllPosts = () => axios.get(allPostsURL, authorizedJSONHeaders)
@@ -13,7 +13,7 @@ export const getAllPosts = () => axios.get(allPostsURL, authorizedJSONHeaders)
   }))
   .catch(railsErrorHandler)
 
-export const getOnePost = (postID) => axios.get(onePostURL(postID), authorizedJSONHeaders)
+export const getOnePost = (postID) => axios.get(onePostUrl(postID), authorizedJSONHeaders)
   .then(r => r.data)
   .then(data => ({
       data: data,
@@ -40,7 +40,7 @@ export const createPost = post => axios.post(allPostsURL, {post}, authorizedJSON
   .catch(railsErrorHandler)
 
 export const deletePost = (postId) => axios.delete(
-    onePostURL(postId),
+    onePostUrl(postId),
     authorizedJSONHeaders
   )
   .then(r => r.data)
@@ -51,7 +51,7 @@ export const deletePost = (postId) => axios.delete(
   .catch(railsErrorHandler)
 
 export const updatePost = (id, post) => axios.put(
-    onePostURL(id),
+    onePostUrl(id),
     {post},
     authorizedJSONHeaders
   )
@@ -59,5 +59,36 @@ export const updatePost = (id, post) => axios.put(
   .then(data => ({
     data: data,
     error: null
+  }))
+  .catch(railsErrorHandler)
+
+const postMediaUrl = id => `${onePostUrl(id)}/media`
+export const addMedia = (id, mediaFile) => {
+  const data = new FormData()
+  data.append('file', mediaFile)
+  return axios.post(
+    postMediaUrl(id),
+    data,
+    Object.assign({}, authorizedJSONHeaders, {
+      "Content-Type": `multipart/form-data`,
+      "Content-Length": `${mediaFile.size}`,
+    })
+  )
+  .then(r => r.data)
+  .then(data => ({
+    data: data,
+    error: null,
+  }))
+  .catch(railsErrorHandler)
+}
+
+export const allMedia = id => axios.get(
+    postMediaUrl(id),
+    authorizedJSONHeaders
+  )
+  .then(r => r.data)
+  .then(data => ({
+    data: data, 
+    error: null,
   }))
   .catch(railsErrorHandler)

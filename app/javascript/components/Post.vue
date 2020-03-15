@@ -11,6 +11,7 @@
             <md-card-content>
                 {{ post.text }}
             </md-card-content>
+            <EditableMedia :media='mediaList' :model_id='post.id' :model_type='"Post"' />
             <md-card-actions>
 
                 <md-button :to='showPost' v-if='!isEditable'>
@@ -27,24 +28,30 @@
     </div>
 </template>
 <script>
-import {getPostComments, deletePost} from '../services/posts'
-
+import {getPostComments, deletePost, allMedia} from '../services/posts'
+import EditableMedia from './EditableMedia.vue'
 export default {
     name: 'Post',
-    components: {},
+    components: {EditableMedia},
     props: {
         post: Object, // id, topic, text, private, employee_id, created_at, updated_at
+        media: {default: () => ([]), type: Array},
         isEditable: {default: true, type: Boolean},
+        loadMedia: {default: false, type: Boolean},
     },
-    data: () => {
+    data: function() {
         return {
-            comments: []
+            comments: [],
+            mediaList: this.media,
         }
     },
     created: function() {
         getPostComments(this.post.id).then(r => {
             this.comments = r.data
         })
+        if(this.loadMedia) {
+            allMedia(this.post.id).then(r => this.mediaList = r.data)
+        }
     },
     computed: {
         commentCount: function() {
@@ -75,7 +82,7 @@ export default {
 </script>
 <style  scoped>
 .md-card {
-    width: 320px;
+    width: 800px;
 }
 .md-action {
     justify-content: right;

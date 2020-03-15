@@ -23,7 +23,7 @@ export default {
 ul {
     list-style-type: none;
     width: 100%;
-    overflow-x: scroll;
+    overflow-x: auto;
     white-space: nowrap;
 }
 ul > li {
