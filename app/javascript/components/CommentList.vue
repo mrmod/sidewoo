@@ -1,6 +1,12 @@
 <template>
   <div id="comment-list">
-    <Comment v-on:deleteComment='deleteComment' v-for='comment in comments' :key='comment.id' :comment='comment' :post='post' />
+    <Comment
+      v-on:deleteComment='deleteComment'
+      v-on:commentUpdated='commentUpdated'
+      v-for='comment in comments'
+      :key='comment.id'
+      :comment='comment'
+      :post='post' />
     <AddComment v-on:commented='commentAdded' :post='post' :comment='null' />
   </div>
 </template>
@@ -20,6 +26,13 @@ export default {
         },
         deleteComment: function() {
           this.$emit('reloadComments')
+        },
+        commentUpdated: function(update) {
+          this.comments.forEach(comment => {
+            if (update.id && comment.id === update.id) {
+              comment.text = update.text
+            }
+          })
         }
     }
 }

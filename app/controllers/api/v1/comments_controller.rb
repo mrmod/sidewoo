@@ -34,6 +34,16 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def update
+    begin
+      @comment = Comment.update params[:id], valid_params
+      respond_to do |format|
+        format.json { render json: @comment }
+      end
+    rescue ActiveModel::ForbiddenAttributesError => e
+      puts "Error: #{e} #{params}"
+      
+      render json: {'notFound': params[:id], status: 404 }
+    end
   end
 
   private

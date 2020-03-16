@@ -32,7 +32,8 @@ Rails.application.routes.draw do
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'
     end
-    resources :comments, controller: 'v1/comments' do 
+    resources :comments, controller: 'v1/comments' do
+      resources :media, controller: 'v1/comment_media'
       resources :tags, controller: 'v1/tags'
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'
