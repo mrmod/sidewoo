@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  text: MyText
+  event: one
+  event_comment_id: 
+  employee: one
+
+two:
+  text: MyText
+  event: two
+  event_comment_id: 
+  employee: two

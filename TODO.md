@@ -7,6 +7,7 @@ rails g model Social name:string url:text handle:string business:references --fo
 rails g model Event name:string theme:text description:text start_time:timestamp end_time:timestamp parent_id:bigint business:references --force
 rails g model Post topic:text text:text private:boolean employee:references --force
 rails g model Comment text:text post:references comment_id:bigint employee:references --force
+rails g model EventComment text:text event:references event_comment_id:bigint employee:references --force
 rails g model BusinessGroup name:string description:text private:boolean --force
 rails g model BusinessGroupMember business_group:references business:references --force
 rails g model PostMember post:references employee:references role:integer --force

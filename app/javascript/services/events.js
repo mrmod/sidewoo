@@ -3,6 +3,8 @@ import {authorizedJSONHeaders, railsErrorHandler} from './requests'
 
 const allEventsURL = '/api/events'
 const oneEventUrl = id => `${allEventsURL}/${id}`
+const eventCommentsUrl = id => `${allEventsURL}/${id}/comments`
+
 
 export const getAllEvents = () => axios.get(allEventsURL, authorizedJSONHeaders)
   .then(r => r.data)
@@ -35,6 +37,17 @@ export const getOneEvent = id => axios.get(oneEventUrl(id), authorizedJSONHeader
     error: null,
   }))
   .catch(railsErrorHandler)
+
+export const getEventComments = id => axios.get(
+  eventCommentsUrl(id),
+  authorizedJSONHeaders
+).then(r => r.data)
+.then(data => ({
+    data: data,
+    error: null,
+}))
+.catch(railsErrorHandler)
+
 export const updateEvent = (id, event) => axios.put(
     oneEventUrl(id),
     {event},
