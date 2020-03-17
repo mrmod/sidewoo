@@ -24,13 +24,13 @@
   </div>
 </template>
 <script>
-import {deleteComment, allMedia, addMedia, updateComment} from '../services/comments'
+import {allMedia, addMedia, updateComment, deleteComment} from '../services/comments'
 import EditableMedia from './EditableMedia.vue'
 export default {
     name: 'Comment',
     components: {EditableMedia},
     props: {
-        comment: Object, // id, text, post_id, comment_id, employee_id, created/updated_at
+        comment: Object,
     },
     data: function() {
         return {

@@ -10,8 +10,6 @@ class CreateLocations < ActiveRecord::Migration[6.0]
       t.string :postal
       t.bigint :locatable_id
       t.string :locatable_type
-
-      t.timestamps
     end
   end
 end

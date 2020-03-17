@@ -5,8 +5,6 @@ class CreateSocials < ActiveRecord::Migration[6.0]
       t.text :url
       t.string :handle
       t.references :business, null: false, foreign_key: true
-
-      t.timestamps
     end
   end
 end

@@ -9,8 +9,6 @@ class CreateBusinesses < ActiveRecord::Migration[6.0]
       t.string :type
       t.boolean :employee_business
       t.string :handle
-
-      t.timestamps
     end
   end
 end

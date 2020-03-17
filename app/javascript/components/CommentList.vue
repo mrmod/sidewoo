@@ -6,8 +6,11 @@
       v-for='comment in comments'
       :key='comment.id'
       :comment='comment'
-      :post='post' />
-    <AddComment v-on:commented='commentAdded' :post='post' :comment='null' />
+      />
+    <AddComment
+      v-on:commented='commentAdded'
+      v-on:addComment='addComment'
+      :comment='null' />
   </div>
 </template>
 <script>
@@ -18,7 +21,6 @@ export default {
     components: {Comment, AddComment},
     props: {
         comments: Array,
-        post: Number,
     },
     methods: {
         commentAdded: function() {
@@ -33,6 +35,9 @@ export default {
               comment.text = update.text
             }
           })
+        },
+        addComment: function(comment) {
+          this.$emit('addComment', comment)
         }
     }
 }

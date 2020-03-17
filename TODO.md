@@ -1,24 +1,26 @@
 # Models
 
 ```
-rails g model Business name:string address:text phone:string email:string website:text type:string employee_business:boolean handle:string --force
-rails g model Employee name:string business:references role:integer handle:string --force
-rails g model Social name:string url:text handle:string business:references --force
-rails g model Event name:string theme:text description:text start_time:timestamp end_time:timestamp parent_id:bigint business:references --force
-rails g model Post topic:text text:text private:boolean employee:references --force
-rails g model Comment text:text post:references comment_id:bigint employee:references --force
-rails g model EventComment text:text event:references event_comment_id:bigint employee:references --force
-rails g model BusinessGroup name:string description:text private:boolean --force
-rails g model BusinessGroupMember business_group:references business:references --force
-rails g model PostMember post:references employee:references role:integer --force
+rails g migration CreateBusinesses name:string address:text phone:string email:string website:text type:string employee_business:boolean handle:string --force
+rails g migration CreateEmployees name:string business:references role:integer handle:string --force
+rails g migration CreateSocials name:string url:text handle:string business:references --force
+rails g migration CreateEvents name:string theme:text description:text all_day:boolean start_time:timestamp end_time:timestamp parent_id:bigint business:references --force
+rails g migration CreateEventTimes name:string description:text all_day:boolean start_date:timestamp start_time:timestamp end_date:timestamp end_time:timestamp business:references --force
+rails g migration CreatePosts topic:text text:text private:boolean employee:references --force
+rails g migration CreateBusinessGroups name:string description:text private:boolean --force
+rails g migration CreateBusinessGroupMembers business_group:references business:references --force
+rails g migration CreatePostMembers post:references employee:references role:integer --force
 
 # Polymorphic types
-rails g model Location name:text address:text city:text country:string province:string state:string postal:string locatable_id:bigint locatable_type:string --force
-rails g model Tag name:string value:string url:text taggable_id:bigint taggable_type:string --force
-rails g model Medium name:text url:text mediumable_id:bigint mediumable_type:string content_type:string --force
+rails g migration CreateLocations name:text address:text city:text country:string province:string state:string postal:string locatable_id:bigint locatable_type:string --force
+rails g migration CreateTags name:string value:string url:text taggable_id:bigint taggable_type:string --force
+rails g migration CreateMedia name:text url:text description:text mediumable_id:bigint mediumable_type:string content_type:string --force
+rails g migration CreateComments text:text comment_id:bigint employee:references commentable_type:string commentable_id:bigint --force
 
 # Defaults and settings
 sed -i  -e 's/t\.integer :role$/t.integer :role, default: 0/' db/migrate/*_create_employees.rb
+sed -i  -e 's/t\.boolean :private$/t.boolean :all_day, default: false/' db/migrate/*_create_events.rb
+sed -i  -e 's/t\.boolean :private$/t.boolean :all_day, default: false/' db/migrate/*_create_event_times.rb
 sed -i  -e 's/t\.boolean :private$/t.boolean :private, default: false/' db/migrate/*_create_posts.rb
 sed -i  -e 's/t\.boolean :private$/t.boolean :private, default: false/' db/migrate/*_create_business_groups.rb
 sed -i  -e 's/t\.integer :role$/t.integer :role, default: 0/' db/migrate/*_create_post_members.rb
@@ -162,18 +164,25 @@ business.tags.create! name: 'BusinessRegion', value: 'Main'
 business.locations.create! address: '1 Downtown St.', city: 'Town', state: 'CA', postal: '90120'
 
 employee = Employee.create! name: 'Employee A', business:business
+employee_b = Employee.create! name: 'Employee B', business:business
 
-event = Event.create! name: 'Event', theme: 'Event Theme', description: 'Description', business: business
-event.media.create! name: 'MainFlyer', value: 'HappyFlyer'
+event = Event.create! name: 'Event', theme: 'Event Theme', description: 'Description', business: business, start_time: DateTime.now, end_time: DateTime.now
+[1,2,3].each do |n|
+  event.comments.create! text: "Event comment #{n}", employee: employee
+end
+event.comments.create! text: "Event comment from employee B", employee: employee_b
+
+event.media.create! name:'MainFlyer', url: 'MainFlyerURL'
 
 post = Post.create! topic: 'Topic', text: 'Text', employee: employee
 post_member = PostMember.create! post: post, employee: employee, role: 0
-comment_1 = Comment.create! text: 'Comment 1', post: post, employee: employee
-comment_2 = Comment.create! text: 'Comment 2', post: post, employee: employee
-comment_3 = Comment.create! text: 'Comment 3', post: post, comment: comment_2, employee: employee
+[1,2,3].each do |n|
+  post.comments.create! text: "Post comment #{n}", employee: employee
+end
+post.comments.create! text: "Post comment from employee B", employee: employee_b
 
 group = BusinessGroup.create! name: 'Group', description: 'Description'
-group_member = BusinessGroupMember.create! business_group: group, business:business
+group_member = BusinessGroupMember.create! business_group: group, business: business
 ```
 
 

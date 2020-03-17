@@ -12,18 +12,18 @@
         v-if='!inViewMode'
         v-on:changeMode='changeMode'
         v-on:updatePost='updatePost'
-        v-on:addedMedia='addedMedia'
-        />
+        v-on:addedMedia='addedMedia' />
 
     <CommentList
       v-on:reloadComments='reloadComments'
+      v-on:addComment='addComment'
       v-if='isCommentsLoaded'
-      :comments='comments'
-      :post='id' />
+      :comments='comments' />
   </div>
 </template>
 <script>
 import {getOnePost, getPostComments, updatePost, allMedia} from '../services/posts'
+import {createComment} from '../services/post_comments'
 import Post from './Post.vue'
 import EditablePost from './EditablePost.vue'
 import CommentList from './CommentList'
@@ -92,6 +92,10 @@ export default {
         },
         addedMedia: function(media) {
             this.media.push(media)
+        },
+        addComment: function(comment) {
+            createComment(this.id, comment)
+            .then(r => this.comments.push(r.data))
         }
     }
 }

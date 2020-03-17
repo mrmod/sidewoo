@@ -3,7 +3,7 @@ class Post < ApplicationRecord
   validates :text, presence: true
   
   belongs_to :employee
-  has_many :comments, dependent: :destroy # remove comments on deletion
+  has_many :comments, as: :commentable
   
   has_many :post_members, dependent: :destroy # remove memberships on deletion
   has_many :employees, through: :post_members

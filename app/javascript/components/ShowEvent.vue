@@ -12,15 +12,23 @@
         v-on:changeMode='changeMode'
         v-on:addedMedia='addedMedia'
         v-on:updateEvent='updateEvent' />
+      <CommentList
+        v-on:reloadComments='reloadComments'
+        v-on:addComment='addComment'
+        v-if='isCommentsLoaded'
+        :comments='comments' />
   </div>
 </template>
 <script>
 import Event from './Event'
 import EditableEvent from './EditableEvent.vue'
+import CommentList from './CommentList.vue'
 import {getOneEvent, updateEvent, allMedia} from '../services/events'
+import {allComments, createComment} from '../services/event_comments'
+
 export default {
     name: 'ShowEvent',
-    components: {EditableEvent, Event},
+    components: {CommentList, EditableEvent, Event},
     data: function() {
         return {
             id: parseInt(this.$route.params.id),
@@ -35,12 +43,15 @@ export default {
             updated_at: new Date(),
             inViewMode: true,
             media: [],
+            comments: [],
+            isCommentsLoaded: false,
         }
     },
     created: function() {
         Promise.all([
             this.getMedia(),
             this.getEvent(),
+            this.getComments(),
         ])
     },
     methods: {
@@ -59,6 +70,12 @@ export default {
                 this.business_id = event.business_id
                 this.created_at = event.created_at
                 this.updated_at = event.updated_at
+            })
+        },
+        getComments: function() {
+            return allComments(this.id).then(r => {
+                this.comments = r.data
+                this.isCommentsLoaded = true
             })
         },
         addedMedia: function(media) {
@@ -81,12 +98,19 @@ export default {
                 updated_at: this.updated_at,
             }
         },
+        reloadComments: function() {
+            this.getComments()
+        },
         updateEvent: function(event) {
             updateEvent(event.id, event).then(r => {
                 this.$emit('eventUpdated')
                 this.changeMode()
                 this.$router.go() // Optional update the event from client data
             })
+        },
+        addComment: function(comment) {
+            createComment(this.id, comment)
+            .then(r => this.comments.push(r.data))
         }
     }
 }

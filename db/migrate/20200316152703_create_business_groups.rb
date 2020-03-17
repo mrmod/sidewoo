@@ -4,8 +4,6 @@ class CreateBusinessGroups < ActiveRecord::Migration[6.0]
       t.string :name
       t.text :description
       t.boolean :private, default: false
-
-      t.timestamps
     end
   end
 end

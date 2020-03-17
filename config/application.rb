@@ -24,6 +24,18 @@ module Sidewoo
     rescue Aws::S3::Errors::BucketAlreadyExists, Aws::S3::Errors::BucketAlreadyOwnedByYou
     end
 
+    unless Rails.env.production?
+      minio_client = ENV['MINIO_CLIENT']
+      minio_url = ENV['MINIO_URL']
+      minio_host = ENV['MINIO_HOST']
+      minio_access_key = ENV['MINIO_ACCESS_KEY']
+      minio_secret_key = ENV['MINIO_SECRET_KEY']
+      minio_policy = ENV['MINIO_POLICY']
+      puts "EXEC: #{minio_client} host add #{minio_host} #{minio_url} #{minio_access_key} #{minio_secret_key}"
+
+      `#{minio_client} host add #{minio_host} #{minio_url} #{minio_access_key} #{minio_secret_key}`
+      `#{minio_client} policy set-json #{minio_policy} #{minio_host}/#{config.media_bucket}`
+    end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading

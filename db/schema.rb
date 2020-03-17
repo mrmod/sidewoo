@@ -10,13 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_05_154711) do
+ActiveRecord::Schema.define(version: 2020_03_16_152740) do
 
   create_table "business_group_members", force: :cascade do |t|
     t.integer "business_group_id", null: false
     t.integer "business_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["business_group_id"], name: "index_business_group_members_on_business_group_id"
     t.index ["business_id"], name: "index_business_group_members_on_business_id"
   end
@@ -25,8 +23,6 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
     t.string "name"
     t.text "description"
     t.boolean "private", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "businesses", force: :cascade do |t|
@@ -38,19 +34,15 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
     t.string "type"
     t.boolean "employee_business"
     t.string "handle"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "comments", force: :cascade do |t|
     t.text "text"
-    t.integer "post_id", null: false
     t.bigint "comment_id"
     t.integer "employee_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.string "commentable_type"
+    t.bigint "commentable_id"
     t.index ["employee_id"], name: "index_comments_on_employee_id"
-    t.index ["post_id"], name: "index_comments_on_post_id"
   end
 
   create_table "employees", force: :cascade do |t|
@@ -58,21 +50,30 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
     t.integer "business_id", null: false
     t.integer "role", default: 0
     t.string "handle"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["business_id"], name: "index_employees_on_business_id"
+  end
+
+  create_table "event_times", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.boolean "all_day"
+    t.datetime "start_date"
+    t.datetime "start_time"
+    t.datetime "end_date"
+    t.datetime "end_time"
+    t.integer "business_id", null: false
+    t.index ["business_id"], name: "index_event_times_on_business_id"
   end
 
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.text "theme"
     t.text "description"
+    t.boolean "all_day"
     t.datetime "start_time"
     t.datetime "end_time"
     t.bigint "parent_id"
     t.integer "business_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["business_id"], name: "index_events_on_business_id"
   end
 
@@ -86,25 +87,21 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
     t.string "postal"
     t.bigint "locatable_id"
     t.string "locatable_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "media", force: :cascade do |t|
     t.text "name"
     t.text "url"
+    t.text "description"
     t.bigint "mediumable_id"
     t.string "mediumable_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.string "content_type"
   end
 
   create_table "post_members", force: :cascade do |t|
     t.integer "post_id", null: false
     t.integer "employee_id", null: false
     t.integer "role", default: 0
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["employee_id"], name: "index_post_members_on_employee_id"
     t.index ["post_id"], name: "index_post_members_on_post_id"
   end
@@ -114,8 +111,6 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
     t.text "text"
     t.boolean "private", default: false
     t.integer "employee_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["employee_id"], name: "index_posts_on_employee_id"
   end
 
@@ -124,8 +119,6 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
     t.text "url"
     t.string "handle"
     t.integer "business_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["business_id"], name: "index_socials_on_business_id"
   end
 
@@ -135,15 +128,13 @@ ActiveRecord::Schema.define(version: 2020_03_05_154711) do
     t.text "url"
     t.bigint "taggable_id"
     t.string "taggable_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   add_foreign_key "business_group_members", "business_groups"
   add_foreign_key "business_group_members", "businesses"
   add_foreign_key "comments", "employees"
-  add_foreign_key "comments", "posts"
   add_foreign_key "employees", "businesses"
+  add_foreign_key "event_times", "businesses"
   add_foreign_key "events", "businesses"
   add_foreign_key "post_members", "employees"
   add_foreign_key "post_members", "posts"

@@ -6,8 +6,6 @@ class CreateTags < ActiveRecord::Migration[6.0]
       t.text :url
       t.bigint :taggable_id
       t.string :taggable_type
-
-      t.timestamps
     end
   end
 end
