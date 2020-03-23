@@ -22,16 +22,14 @@ Rails.application.routes.draw do
     resources :events, controller: 'v1/events' do 
       resources :comments, controller: 'v1/event_comments'
       resources :media, controller: 'v1/event_media'
-      resources :tags, controller: 'v1/tags'
+      resources :tags, controller: 'v1/event_tags'
       resources :locations, controller: 'v1/locations'
-      resources :media, controller: 'v1/media'
     end
     resources :posts, controller: 'v1/posts' do
       resources :comments, controller: 'v1/post_comments'
       resources :media, controller: 'v1/post_media'
-      resources :tags, controller: 'v1/tags'
+      resources :tags, controller: 'v1/post_tags'
       resources :locations, controller: 'v1/locations'
-      resources :media, controller: 'v1/media'
     end
     resources :comments, controller: 'v1/comments' do
       resources :media, controller: 'v1/comment_media'

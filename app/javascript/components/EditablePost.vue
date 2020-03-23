@@ -15,6 +15,7 @@
       :model_id='id'
       :model_type='"Post"'
       />
+    <slot />
     <md-button class="md-raised md-primary" @click='savePost'>Save</md-button>
     <md-button class="md-accent" @click='cancel'>
       Cancel

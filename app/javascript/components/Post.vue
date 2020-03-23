@@ -12,6 +12,7 @@
                 {{ post.text }}
             </md-card-content>
             <EditableMedia :media='mediaList' :model_id='post.id' :model_type='"Post"' />
+            <slot />
             <md-card-actions>
 
                 <md-button :to='showPost' v-if='!isEditable'>
@@ -42,6 +43,7 @@ export default {
     data: function() {
         return {
             comments: [],
+            tags: [],
             mediaList: this.media,
         }
     },
@@ -52,6 +54,7 @@ export default {
         if(this.loadMedia) {
             allMedia(this.post.id).then(r => this.mediaList = r.data)
         }
+        
     },
     computed: {
         commentCount: function() {
@@ -76,6 +79,9 @@ export default {
                 this.$emit('postDeleted')
                 this.$router.replace('/posts')
             })
+        },
+        deleteTag: function(tag) {
+            deleteTag(tag.id).then(() => this.allTags())
         }
     }
 }

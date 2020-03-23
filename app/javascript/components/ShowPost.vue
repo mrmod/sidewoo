@@ -5,14 +5,18 @@
       :loadMedia='true'
       :media='media'
       v-if='inViewMode'
-      v-on:changeMode='changeMode' />
+      v-on:changeMode='changeMode'>
+        <TagList :tags='tags' v-on:deleteTag='deleteTag' :isEditable="isEditor" />
+    </Post>
     <EditablePost
         :post='post'
         :media='media'
         v-if='!inViewMode'
         v-on:changeMode='changeMode'
         v-on:updatePost='updatePost'
-        v-on:addedMedia='addedMedia' />
+        v-on:addedMedia='addedMedia'>
+        <TagList :tags='tags' v-on:deleteTag='deleteTag' :isEditable="isEditor" />
+    </EditablePost>
 
     <CommentList
       v-on:reloadComments='reloadComments'
@@ -24,12 +28,14 @@
 <script>
 import {getOnePost, getPostComments, updatePost, allMedia} from '../services/posts'
 import {createComment} from '../services/post_comments'
+import {deleteTag} from '../services/tags'
 import Post from './Post.vue'
 import EditablePost from './EditablePost.vue'
-import CommentList from './CommentList'
+import TagList from './TagList.vue'
+import CommentList from './CommentList.vue'
 export default {
     name: 'ShowPost',
-    components: {CommentList, EditablePost, Post},
+    components: {CommentList, EditablePost, Post, TagList},
 
     // id, topic, text, private, employee_id, created_at, updated_a
     data: function() {
@@ -43,9 +49,10 @@ export default {
             updated_at: new Date(),
             comments: [],
             media: [],
+            tags: [],
             isPostLoaded: false,
             isCommentsLoaded: false,
-            inViewMode: true
+            inViewMode: true,
         }
     },
     created: function() {
@@ -57,6 +64,7 @@ export default {
             this.created_at= r.data.created_at
             this.updated_at = r.data.updated_at
             this.isPostLoaded = true
+            this.tags = r.data.tags
         })
         getPostComments(this.id).then(r => {
             this.comments = r.data
@@ -75,9 +83,17 @@ export default {
                 created_at: this.created_at,
                 updated_at: this.updated_at,
             }
+        },
+        isEditor: function() {
+            return parseInt(this.employee_id) === parseInt(this.$currentUser.employee_id)
         }
     },
     methods: {
+        deleteTag: function(tag) {
+            deleteTag(tag.id).then(() => {
+                this.tags = this.tags.filter(t => (t.id !== tag.id))
+            })
+        },
         reloadComments: function() {
             getPostComments(this.id).then(r => this.comments = r.data)
         },

@@ -1,20 +1,21 @@
 class Api::V1::PostsController < ApplicationController
   def index
+
     respond_to do |format|
-      format.json { render json: Post.all }
+      format.json { render json: Post.all, include: :tags }
     end
   end
   def show
     @post = Post.find_by_id params[:id]
     respond_to do |format|
-      format.json { render json: @post }
+      format.json { render json: @post, include: :tags}
     end
   end
 
   def create
     @post = Post.create valid_params
     respond_to do |format|
-      format.json {render json: @post}
+      format.json {render json: @post }
     end
   end
 
@@ -35,7 +36,7 @@ class Api::V1::PostsController < ApplicationController
     begin
       @post = Post.update params[:id], valid_params
       respond_to do |format|
-        format.json { render json: @post }
+        format.json { render json: @post, include: :tags }
       end
     rescue ActiveModel::ForbiddenAttributesError => e
       puts "Error: #{e} #{params}"

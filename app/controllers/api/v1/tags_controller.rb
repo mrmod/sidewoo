@@ -13,7 +13,13 @@ class Api::V1::TagsController < ApplicationController
   def create
   end
 
-  def delete
+  def destroy
+    begin
+      Tag.destroy params[:id]
+      render json: {id: params[:id]}
+    rescue ActiveRecord::RecordNotFound
+      render json: nil, status: 404
+    end
   end
 
   def update

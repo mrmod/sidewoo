@@ -17,8 +17,10 @@ event = Event.create! name: 'Event', theme: 'Event Theme', description: 'Descrip
   event.comments.create! text: "Event comment #{n}", employee: employee
 end
 event.comments.create! text: "Event comment from employee B", employee: employee_b
-
 event.media.create! name:'MainFlyer', url: 'MainFlyerURL'
+[1,2,3].each do |n|
+  event.tags.create! name: "Tag #{n}", value: "Value #{n}", url: "Url#{n}"
+end
 
 post = Post.create! topic: 'Topic', text: 'Text', employee: employee
 post_member = PostMember.create! post: post, employee: employee, role: 0
@@ -26,6 +28,8 @@ post_member = PostMember.create! post: post, employee: employee, role: 0
   post.comments.create! text: "Post comment #{n}", employee: employee
 end
 post.comments.create! text: "Post comment from employee B", employee: employee_b
-
+[1,2,3].each do |n|
+  post.tags.create! name: "Tag #{n}", value: "Value #{n}", url: "Url#{n}"
+end
 group = BusinessGroup.create! name: 'Group', description: 'Description'
 group_member = BusinessGroupMember.create! business_group: group, business: business

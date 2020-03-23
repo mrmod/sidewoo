@@ -19,7 +19,8 @@ export default {
    },
    methods: {
        reloadPosts: function() {
-            getAllPosts().then(r => this.posts = r.data)
+            getAllPosts()
+            .then(r => this.posts = r.data)
        }
    }
 }
