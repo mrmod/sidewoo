@@ -3,9 +3,9 @@ class Api::V1::PostTagsController < ApplicationController
         uploaded_file = params[:file]
 
         @post = Post.find_by_id params[:post_id]
-        @tags = @post.tag.create! valid_params
+        @tag = @post.tags.create! valid_params
 
-        render json: {post: @post, tags: @tags}
+        render json: @tag
     end
 
     def index

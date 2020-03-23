@@ -6,7 +6,7 @@
       :media='media'
       v-if='inViewMode'
       v-on:changeMode='changeMode'>
-        <TagList :tags='tags' v-on:deleteTag='deleteTag' :isEditable="isEditor" />
+        <TagList :tags='tags' v-on:deleteTag='deleteTag' />
     </Post>
     <EditablePost
         :post='post'
@@ -15,7 +15,7 @@
         v-on:changeMode='changeMode'
         v-on:updatePost='updatePost'
         v-on:addedMedia='addedMedia'>
-        <TagList :tags='tags' v-on:deleteTag='deleteTag' :isEditable="isEditor" />
+        <TagList :tags='tags' v-on:deleteTag='deleteTag' v-on:addTag='addTag' :isEditable="isEditor" />
     </EditablePost>
 
     <CommentList
@@ -29,6 +29,7 @@
 import {getOnePost, getPostComments, updatePost, allMedia} from '../services/posts'
 import {createComment} from '../services/post_comments'
 import {deleteTag} from '../services/tags'
+import {addTag} from '../services/post_tags'
 import Post from './Post.vue'
 import EditablePost from './EditablePost.vue'
 import TagList from './TagList.vue'
@@ -93,6 +94,14 @@ export default {
             deleteTag(tag.id).then(() => {
                 this.tags = this.tags.filter(t => (t.id !== tag.id))
             })
+        },
+        addTag: function(name) {
+            const tag = {
+                name: name,
+                value: name,
+                url: '',
+            }
+            addTag(this.id, tag).then(r => this.tags.push(r.data))
         },
         reloadComments: function() {
             getPostComments(this.id).then(r => this.comments = r.data)
