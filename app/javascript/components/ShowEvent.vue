@@ -44,6 +44,7 @@ export default {
             inViewMode: true,
             media: [],
             comments: [],
+            invitations: [],
             isCommentsLoaded: false,
         }
     },
@@ -60,6 +61,7 @@ export default {
         },
         getEvent: function() {
             return getOneEvent(this.id).then(r => {
+                // TODO: Something about this is wrong
                 const event = r.data
                 this.name = event.name
                 this.theme = event.theme
@@ -70,6 +72,9 @@ export default {
                 this.business_id = event.business_id
                 this.created_at = event.created_at
                 this.updated_at = event.updated_at
+                this.comments = event.comments
+                this.media = event.media
+                this.invitations = event.invitations
             })
         },
         getComments: function() {
@@ -86,6 +91,9 @@ export default {
         },
         event: function() {
             return {
+                media: this.media,
+                comments: this.comments,
+                invitations: this.invitations,
                 id: this.id,
                 name: this.name,
                 theme: this.theme,

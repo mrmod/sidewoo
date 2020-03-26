@@ -6,6 +6,9 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 business = Business.create! name: 'Business', address: '1 Address St. Place, CA 90210', phone: '123-456-7890', email: 'test@sidewoo.com'
+[1,2,3].each do |n|
+  Business.create! name: "Business #{n}", address: "#{n} Business Road Town, CA 9021#{n}", phone: "123-#{n}56-7890", email: "admin#{n}"
+end
 business.tags.create! name: 'BusinessRegion', value: 'Main'
 business.locations.create! address: '1 Downtown St.', city: 'Town', state: 'CA', postal: '90120'
 

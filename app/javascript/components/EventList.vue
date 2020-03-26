@@ -32,6 +32,7 @@ export default {
             end_time: '',
             business_id: this.$currentUser.business_id,
             showAddEvent: false,
+            invitations: [],
             errors: null,
         }
       }

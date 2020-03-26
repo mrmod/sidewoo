@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       resources :locations, controller: 'v1/locations'
       resources :media, controller: 'v1/media'
     end
+    resources :event_invitations, controller: 'v1/event_invitations', only: [:create, :destroy]
     resources :social, controller: 'v1/social' do 
       resources :tags, controller: 'v1/tags'
       resources :locations, controller: 'v1/locations'
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
       resources :media, controller: 'v1/event_media'
       resources :tags, controller: 'v1/event_tags'
       resources :locations, controller: 'v1/locations'
+      resources :pending_event_invitations, controller: 'v1/pending_event_invitations', only: [:show]
     end
     resources :posts, controller: 'v1/posts' do
       resources :comments, controller: 'v1/post_comments'
@@ -46,6 +48,6 @@ Rails.application.routes.draw do
     resources :post_members, controller: 'v1/post_members'
     resources :locations, controller: 'v1/locations'
     resources :tags, controller: 'v1/tags'
-    resources :media, controller: 'v1/media'
+    resources :media, controller: 'v1/media', only: [:show, :update, :delete]
   end
 end

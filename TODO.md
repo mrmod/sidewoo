@@ -10,6 +10,7 @@ rails g migration CreatePosts topic:text text:text private:boolean employee:refe
 rails g migration CreateBusinessGroups name:string description:text private:boolean --force
 rails g migration CreateBusinessGroupMembers business_group:references business:references --force
 rails g migration CreatePostMembers post:references employee:references role:integer --force
+rails g migration CreateEventInvitation name:text host_business_id:bigint guest_business_id:bigint event:references redemption_code:string
 
 # Polymorphic types
 rails g migration CreateLocations name:text address:text city:text country:string province:string state:string postal:string locatable_id:bigint locatable_type:string --force

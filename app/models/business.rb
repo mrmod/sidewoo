@@ -2,6 +2,7 @@ class Business < ApplicationRecord
     has_many :events
     has_many :employees
     has_many :socials
+    has_many :event_invitations
 
     has_many :business_group_members
     has_many :business_groups, through: :business_group_members

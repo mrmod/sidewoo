@@ -20,6 +20,11 @@
             </span>
           </div>
         </div>
+        <ul id="event-invitations-list">
+          <li v-for="invitation in event.invitations" :key='invitation.id'>
+              {{invitation.name}} invited
+          </li>
+        </ul>
         <EditableMedia :media='mediaList' :model_id='event.id' :model_type='"Event"' />
       </md-card-content>
       <md-card-actions>

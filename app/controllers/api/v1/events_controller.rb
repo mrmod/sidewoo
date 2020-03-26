@@ -1,16 +1,12 @@
 class Api::V1::EventsController < ApplicationController
   def index
-    respond_to do |format|
-      format.json { render json: Event.all }
-    end
+    render json: Event.all, include: :invitations
   end
 
   def show
     @event = Event.find_by_id params[:id]
     if @event.present?
-      respond_to do |format|
-        format.json { render json: @event}
-      end
+      render json: @event, include: :invitations
     else
       render json: {'notFound': params[:id]}, status: 404
     end

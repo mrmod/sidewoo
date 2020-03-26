@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_16_152740) do
+ActiveRecord::Schema.define(version: 2020_03_25_184543) do
 
   create_table "business_group_members", force: :cascade do |t|
     t.integer "business_group_id", null: false
@@ -38,10 +38,10 @@ ActiveRecord::Schema.define(version: 2020_03_16_152740) do
 
   create_table "comments", force: :cascade do |t|
     t.text "text"
-    t.bigint "comment_id"
+    t.integer "comment_id"
     t.integer "employee_id", null: false
     t.string "commentable_type"
-    t.bigint "commentable_id"
+    t.integer "commentable_id"
     t.index ["employee_id"], name: "index_comments_on_employee_id"
   end
 
@@ -51,6 +51,15 @@ ActiveRecord::Schema.define(version: 2020_03_16_152740) do
     t.integer "role", default: 0
     t.string "handle"
     t.index ["business_id"], name: "index_employees_on_business_id"
+  end
+
+  create_table "event_invitations", force: :cascade do |t|
+    t.text "name"
+    t.bigint "host_business_id"
+    t.bigint "guest_business_id"
+    t.integer "event_id", null: false
+    t.string "redemption_code"
+    t.index ["event_id"], name: "index_event_invitations_on_event_id"
   end
 
   create_table "event_times", force: :cascade do |t|
@@ -72,7 +81,7 @@ ActiveRecord::Schema.define(version: 2020_03_16_152740) do
     t.boolean "all_day"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.bigint "parent_id"
+    t.integer "parent_id"
     t.integer "business_id", null: false
     t.index ["business_id"], name: "index_events_on_business_id"
   end
@@ -134,6 +143,7 @@ ActiveRecord::Schema.define(version: 2020_03_16_152740) do
   add_foreign_key "business_group_members", "businesses"
   add_foreign_key "comments", "employees"
   add_foreign_key "employees", "businesses"
+  add_foreign_key "event_invitations", "events"
   add_foreign_key "event_times", "businesses"
   add_foreign_key "events", "businesses"
   add_foreign_key "post_members", "employees"

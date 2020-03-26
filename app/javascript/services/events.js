@@ -38,16 +38,6 @@ export const getOneEvent = id => axios.get(oneEventUrl(id), authorizedJSONHeader
   }))
   .catch(railsErrorHandler)
 
-export const getEventComments = id => axios.get(
-  eventCommentsUrl(id),
-  authorizedJSONHeaders
-).then(r => r.data)
-.then(data => ({
-    data: data,
-    error: null,
-}))
-.catch(railsErrorHandler)
-
 export const updateEvent = (id, event) => axios.put(
     oneEventUrl(id),
     {event},
@@ -59,6 +49,16 @@ export const updateEvent = (id, event) => axios.put(
     error: null,
   }))
   .catch(railsErrorHandler)
+
+export const getEventComments = id => axios.get(
+  eventCommentsUrl(id),
+  authorizedJSONHeaders
+).then(r => r.data)
+.then(data => ({
+    data: data,
+    error: null,
+}))
+.catch(railsErrorHandler)
 
 const eventMediaUrl = id => `${oneEventUrl(id)}/media`
 export const addMedia = (id, mediaFile) => {

@@ -30,6 +30,15 @@
     :format='"YYYY-MM-DD h:mm a"'
     v-model='end_time'
     />
+    <PendingInvitations
+      :pendingInvitations="invitations"
+      v-on:deletedInvitation="deletedInvitation"/>
+    <EventInvitation
+      v-on:invitedBusiness="invitedBusiness"
+      :businesses='businesses'
+      :hostBusinessId='event.business_id'
+      :parentEventId='event.id'
+      :pendingInvitations='invitations' />
     <md-button class="md-raised md-primary" @click='createEvent'>
         Save
     </md-button>
@@ -40,11 +49,14 @@
 </template>
 <script>
 import {createEvent, addMedia} from '../services/events'
+import {allBusinesses} from '../services/businesses'
 import Errors from './Errors.vue'
 import EditableMedia from './EditableMedia.vue'
+import EventInvitation from './EventInvitation.vue'
+import PendingInvitations from './PendingInvitations.vue'
 export default {
     name: 'AddEvent',
-    components: {EditableMedia, Errors},
+    components: {EditableMedia, Errors, EventInvitation, PendingInvitations},
     props: {
         event: {type: Object, required: false},
         media: Array,
@@ -52,6 +64,8 @@ export default {
     data: function() {
         if (this.event) {
             return {
+                businesses: [],
+                invitations: this.event.invitations,
                 id: this.event.id,
                 isExisting: true,
                 name: this.event.name,
@@ -65,6 +79,8 @@ export default {
             }
         }
         return {
+            businesses: [],
+            invitations: [],
             name: '',
             theme: '',
             description: '',
@@ -75,7 +91,22 @@ export default {
             errors: null,
         }
     },
+    created: function() {
+        this.allBusinesses()
+    },
     methods: {
+        // TODO: API must only provide relevant businesses for this event. Eg, in group, regional, etc
+        allBusinesses: function() {
+            return allBusinesses()
+            .then(r => {
+                this.businesses = r.data
+            })
+        },
+        invitedBusiness: function(eventInvitation) {
+            console.log(`Adding invitation`, eventInvitation)
+            this.invitations.push(eventInvitation)
+            this.businesses = this.businesses.filter(b => b.id !== eventInvitation.guest_business_id)
+        },
         createEvent: function() {
   
             const event = {
@@ -94,6 +125,13 @@ export default {
                 return
             }
             this.$emit('createEvent', event)
+        },
+        deletedInvitation: function(id) {
+            console.log(`Deleting invitation ${id} from ${this.invitations.length}`)
+            let invitation = this.invitations.find(i => i.id === id)
+            console.log('Removing', invitation)
+            this.invitations = this.invitations.filter(i => i.id !== invitation.id)
+            console.log('There are now ', this.invitations.length)
         },
         initializeData: function() {
             this.name = ''
