@@ -1,6 +1,6 @@
 <template>
     <div id="post">
-        <md-card md-with-hover>
+        <md-card md-with-hover v-if='post'>
                 <md-card-header>
                     <router-link tag="span" class="no-decoration" :to='showPost'>
                         <div class="md-title">
@@ -16,11 +16,13 @@
             <md-card-actions>
 
                 <md-button :to='showPost' v-if='!isEditable'>
-                    Comment <i class="material-icons">chat_bubble_outline</i>{{commentCount}}
+                    Comment <i class="material-icons">chat_bubble_outline</i>{{comments.length}}
                 </md-button>
-                <md-button class='md-primary' @click='changeMode' v-if='isEditable && isEditor'>
-                    Edit
-                </md-button>
+                <router-link tag="span" :to='editPost' v-if='isEditable && isEditor'>
+                    <md-button class="md-primary">
+                        Edit
+                    </md-button>
+                </router-link>
                 <md-button class='md-accent' @click='deletePost' v-if='isEditable && isEditor'>
                     Delete
                 </md-button>
@@ -36,49 +38,55 @@ export default {
     components: {EditableMedia},
     props: {
         post: Object, // id, topic, text, private, employee_id, created_at, updated_at
-        media: {default: () => ([]), type: Array},
         isEditable: {default: true, type: Boolean},
         loadMedia: {default: false, type: Boolean},
     },
-    data: function() {
-        return {
-            comments: [],
-            tags: [],
-            mediaList: this.media,
+    created() {
+        if(this.post) {
+            this.$store.dispatch('getPostMedia', this.post.id)
+            this.$store.dispatch('getPostComments', this.post.id)
+        } else {
+            console.log('post is not defined')
         }
-    },
-    created: function() {
-        getPostComments(this.post.id).then(r => {
-            this.comments = r.data
-        })
-        if(this.loadMedia) {
-            allMedia(this.post.id).then(r => this.mediaList = r.data)
-        }
-        
     },
     computed: {
-        commentCount: function() {
-            if (this.comments) {
-                return this.comments.length
-            }
-            return 0
+        comments: function() {
+            return this.$store.getters.postComments(this.post.id)
+            // return this.$store.getters.allComments.filter(c => c.commentable_id === this.post.id && c.commentable_type === 'Post')
+        },
+        commentsCount: function() {
+            return this.$store.getters.postComments(this.post.id).length
+        },
+        tags: function() {
+            return this.$store.getters.postTags(this.post.id)
+        },
+        media: function() {
+            return this.$store.getters.postMedia(this.post.id)
+        },
+        mediaList: function() {
+            return this.$store.getters.postMedia(this.post.id)
         },
         showPost: function() {
-            return {name: 'ShowPost', params: {id: this.post.id}}
+            if (this.post) {
+                return {name: 'ShowPost', params: {id: this.post.id, title: this.post.topic}}
+            }
+        },
+        editPost: function() {
+            if (this.post) {
+                let editPostLink =  {name: 'EditPost', params: {id: this.post.id, title: this.post.topic}}
+                return editPostLink
+            } else {
+                console.error(`Can't generate a post link for ${this.post}`)
+            }
         },
         isEditor: function() {
             return this.$currentUser.employee_id === this.post.employee_id
         }
     },
     methods: {
-        changeMode: function() {
-            this.$emit('changeMode')
-        },
         deletePost: function() {
-            deletePost(this.post.id).then(() => {
-                this.$emit('postDeleted')
-                this.$router.replace('/posts')
-            })
+            this.$store.dispatch('deletePost', this.post.id)
+                .then(() => this.$router.replace('/posts'))
         },
         deleteTag: function(tag) {
             deleteTag(tag.id).then(() => this.allTags())
@@ -87,9 +95,6 @@ export default {
 }
 </script>
 <style  scoped>
-.md-card {
-    width: 800px;
-}
 .md-action {
     justify-content: right;
 }

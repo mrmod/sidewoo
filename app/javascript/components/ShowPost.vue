@@ -2,27 +2,11 @@
   <div id="post">
     <Post
       :post='post'
-      :loadMedia='true'
-      :media='media'
-      v-if='inViewMode'
-      v-on:changeMode='changeMode'>
+      :media='media'>
         <TagList :tags='tags' v-on:deleteTag='deleteTag' />
     </Post>
-    <EditablePost
-        :post='post'
-        :media='media'
-        v-if='!inViewMode'
-        v-on:changeMode='changeMode'
-        v-on:updatePost='updatePost'
-        v-on:addedMedia='addedMedia'>
-        <TagList :tags='tags' v-on:deleteTag='deleteTag' v-on:addTag='addTag' :isEditable="isEditor" />
-    </EditablePost>
 
-    <CommentList
-      v-on:reloadComments='reloadComments'
-      v-on:addComment='addComment'
-      v-if='isCommentsLoaded'
-      :comments='comments' />
+    <CommentList :comments='comments' :model_type='"Post"' :model_id='post.id' />
   </div>
 </template>
 <script>
@@ -31,59 +15,30 @@ import {createComment} from '../services/post_comments'
 import {deleteTag} from '../services/tags'
 import {addTag} from '../services/post_tags'
 import Post from './Post.vue'
-import EditablePost from './EditablePost.vue'
 import TagList from './TagList.vue'
 import CommentList from './CommentList.vue'
 export default {
     name: 'ShowPost',
-    components: {CommentList, EditablePost, Post, TagList},
+    components: {CommentList, Post, TagList},
 
     // id, topic, text, private, employee_id, created_at, updated_a
     data: function() {
         return {
-            id: parseInt(this.$route.params.id),
-            topic: '',
-            text: '',
-            private: true,
-            employee_id: 0,
-            created_at: new Date(),
-            updated_at: new Date(),
-            comments: [],
-            media: [],
-            tags: [],
-            isPostLoaded: false,
-            isCommentsLoaded: false,
             inViewMode: true,
         }
     },
-    created: function() {
-        getOnePost(this.id).then(r => {
-            this.topic = r.data.topic
-            this.text = r.data.text
-            this.private = r.data.private
-            this.employee_id = r.data.employee_id
-            this.created_at= r.data.created_at
-            this.updated_at = r.data.updated_at
-            this.isPostLoaded = true
-            this.tags = r.data.tags
-        })
-        getPostComments(this.id).then(r => {
-            this.comments = r.data
-            this.isCommentsLoaded = true
-        })
-        allMedia(this.id).then(r => this.media = r.data)
-    },
     computed: {
+        comments: function() {
+            return this.$store.getters.postComments(parseInt(this.$route.params.id))
+        },
         post: function() {
-            return {
-                id: this.id,
-                topic: this.topic,
-                text: this.text,
-                private: this.private,
-                employee_id: this.employee_id,
-                created_at: this.created_at,
-                updated_at: this.updated_at,
-            }
+            return this.$store.getters.post(parseInt(this.$route.params.id))
+        },
+        media: function() {
+            return this.$store.getters.postMedia(parseInt(this.$route.params.id))
+        },
+        tags: function() {
+            return this.$store.getters.postTags(parseInt(this.$route.params.id))
         },
         isEditor: function() {
             return parseInt(this.employee_id) === parseInt(this.$currentUser.employee_id)
@@ -106,13 +61,7 @@ export default {
         reloadComments: function() {
             getPostComments(this.id).then(r => this.comments = r.data)
         },
-        updatePost: function(post) {
-            updatePost(post.id, post).then(() => {
-                this.changeMode()
-                this.$router.go() // reload the data
-            })
-        },
-        changeMode: function() {
+        savePost: function() {
             this.inViewMode = !this.inViewMode
         },
         addedMedia: function(media) {

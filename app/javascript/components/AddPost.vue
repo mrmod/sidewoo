@@ -4,8 +4,8 @@
         @click='toggleShowAddPost'>Create a new post</span>
       <EditablePost
         v-if='showAddPost'
-        v-on:createPost='createPost'
-        v-on:changeMode='toggleShowAddPost'
+        v-on:savePost='savePost'
+        v-on:changeMode='savePost'
         :post='post' />
   </div>
 </template>
@@ -38,13 +38,9 @@ export default {
         }
     },
     methods: {
-        createPost: function(post) {
-            createPost(post).then(r => {
-                this.$emit('addedPost')
-                this.toggleShowAddPost()
-                this.initializeData()
-            })
-            .catch(error => this.errors = error.error)
+        savePost: function() {
+            this.toggleShowAddPost()
+            this.initializeData()
         },
         initializeData: function() {
             this.private = false

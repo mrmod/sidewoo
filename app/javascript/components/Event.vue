@@ -25,11 +25,13 @@
               {{invitation.name}} invited
           </li>
         </ul>
-        <EditableMedia :media='mediaList' :model_id='event.id' :model_type='"Event"' />
+        <EditableMedia :media='media' :model_id='event.id' :model_type='"Event"' />
       </md-card-content>
       <md-card-actions>
-        <md-button class='md-primary' @click='changeMode' v-if='isEditable && isEditor'>Edit</md-button>
-        <md-button class='md-accent' @click='deleteEvent' v-if='isEditor'>Delete</md-button>
+        <router-link :to='editEvent' tag="span" v-if='isEditable'>
+          <md-button class='md-primary'>Edit</md-button>
+        </router-link>
+        <md-button class='md-accent' @click='deleteEvent' v-if='isEditable'>Delete</md-button>
       </md-card-actions>
     </md-card>
   </div>
@@ -38,50 +40,38 @@
 import {deleteEvent, updateEvent, allMedia} from '../services/events'
 import {parseDate} from '../services/dates'
 import EditableMedia from './EditableMedia.vue'
+import {resourceId} from '../services/routing'
 export default {
     name: 'Event',
     components: {EditableMedia},
-    props: {
-      event: Object,
-      media: {default: () => ([]), type: Array},
-      isEditable: {default: true, type: Boolean},
-      loadMedia: {default: false, type: Boolean},
-    },
-    data: function() {
-      return {
-        isEditor: true,
-        mediaList: this.media,
-        start_time: this.event.start_time,
-        end_time: this.event.end_time,
-      }
-    },
-    created: function() {
-        if (this.loadMedia) {
-            allMedia(this.event.id).then(r => this.mediaList = r.data)
-        }
-    },
+    props: {event: Object},
     computed: {
-      showEvent: function() {
-          return {name: 'ShowEvent', params: {id: this.event.id}}
+      showEvent() {
+          return {name: 'ShowEvent', params: {id: this.event.id, title: this.event.name}}
       },
-      startTime: function() {
+      editEvent() {
+        return {name: 'EditEvent', params: {id: this.event.id, title: this.event.name }}
+      },
+      media() {
+        return this.$store.getters.eventMedia(parseInt(this.event.id))
+      },
+      isEditable() {
+
+        return this.$currentUser.business_id === this.event.business_id
+      },
+      startTime() {
         let date = parseDate(this.event.start_time)
         return date.toLocaleString()
       },
-      endTime: function() {
+      endTime() {
         let date = parseDate(this.event.end_time)
         return date.toLocaleString()
       }
     },
     methods: {
       deleteEvent: function() {
-        deleteEvent(this.event.id).then(() => {
-          this.$emit('eventDeleted')
-          this.$router.replace('/events')
-        })
-      },
-      changeMode: function() {
-        this.$emit('changeMode')
+        this.$store.dispatch('deleteEvent', this.event.id)
+          .then(() => this.$router.replace('/events'))
       },
     }
 }

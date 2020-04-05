@@ -41,13 +41,9 @@ class Api::V1::EventsController < ApplicationController
   def destroy
     begin
       Event.destroy params[:id]
-      respond_to do |format|
-        format.json { render json: {id: params[:id]} }
-      end
+      render json: {id: params[:id]}
     rescue ActiveRecord::RecordNotFound
-      respond_to do |format|
-        format.json { render json: {}, status: 404 }
-      end
+       render json: {}, status: 404
     end
   end
 

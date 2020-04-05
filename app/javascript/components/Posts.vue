@@ -1,6 +1,6 @@
 <template>
   <div id='posts'>
-      <PostList v-on:reloadPosts='reloadPosts' :posts='posts' />
+      <PostList :posts='posts' />
   </div>
 </template>
 <script>
@@ -9,20 +9,14 @@ import {getAllPosts} from '../services/posts'
 export default {
     name: 'Posts',
     components: { PostList },
-    data: function() {
-        return {
-            posts: [],
-        }
+    computed: {
+        posts() {
+            return this.$store.getters.posts
+        },
     },
-   created: function() {
-       this.reloadPosts()
-   },
-   methods: {
-       reloadPosts: function() {
-            getAllPosts()
-            .then(r => this.posts = r.data)
-       }
-   }
+    created: function() {
+        this.$store.dispatch('getAllPosts')
+    }
 }
 </script>
 

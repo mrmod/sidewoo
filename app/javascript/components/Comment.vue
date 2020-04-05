@@ -52,9 +52,8 @@ export default {
         changed: function() {
             this.isChanged = true
         },
-        deleteComment: function() {
-            deleteComment(this.comment.id)
-            .then(() => this.$emit('deleteComment', this.comment.id))
+        deleteComment() {
+            this.$store.dispatch('deleteComment', this.comment.id)
         },
         saveComment: function() {
             const comment = Object.assign({}, this.comment, {
@@ -95,7 +94,4 @@ export default {
 }
 </script>
 <style lang="sass" scoped>
-.md-card {
-    width: 800px;
-}
 </style>

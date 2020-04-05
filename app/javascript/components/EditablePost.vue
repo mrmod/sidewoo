@@ -62,11 +62,8 @@ export default {
         employee_id: this.employee_id,
         private: this.private,
       }
-      if (this.post) {
-        this.$emit('updatePost', post)
-      } else {
-        this.$emit('createPost', post)
-      }
+      this.$store.dispatch('savePost', post)
+      this.$emit('savePost')
     },
     cancel: function() {
       this.$emit('changeMode')

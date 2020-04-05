@@ -1,11 +1,11 @@
 <template>
   <div id="add-event">
-    <span class="md-display-1" @click='toggleShowAddEvent'>Create a new event</span>
+    <span class="md-display-1" @click='showAddEvent = true'>Create a new event</span>
     <EditableEvent
       v-if='showAddEvent'
       :event='event'
-      v-on:createEvent='createEvent'
-      v-on:changeMode='toggleShowAddEvent' />
+      v-on:saveEvent='saveEvent'
+      v-on:changeMode='saveEvent' />
   </div>
 </template>
 <script>
@@ -44,13 +44,8 @@ export default {
         }
     },
     methods: {
-        createEvent: function(event) {
-            // TODO: Redirect to new event to allow further modification
-            createEvent(event).then(() => {
-                this.$emit('eventAdded')
-                this.initializeData()
-            })
-            .catch(error => this.errors = error.error)
+        saveEvent: function() {
+            this.initializeData()
         },
         initializeData: function() {
             this.name = ''
@@ -61,13 +56,6 @@ export default {
             this.showAddEvent = false
             this.errors = null
         },
-        toggleShowAddEvent: function() {
-            this.showAddEvent = !this.showAddEvent
-            // Clear the errors when it is hidden
-            if (!this.showAddEvent) {
-                this.errors = null
-            }
-        }
     }
 }
 </script>

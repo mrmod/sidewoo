@@ -1,124 +1,23 @@
 <template>
   <div id="show-event">
-      <Event
-        :event='event()'
-        :loadMedia='true'
-        v-if='inViewMode'
-        v-on:changeMode='changeMode' />
-      <EditableEvent
-        :event='event()'
-        :media='media'
-        v-if='!inViewMode'
-        v-on:changeMode='changeMode'
-        v-on:addedMedia='addedMedia'
-        v-on:updateEvent='updateEvent' />
-      <CommentList
-        v-on:reloadComments='reloadComments'
-        v-on:addComment='addComment'
-        v-if='isCommentsLoaded'
-        :comments='comments' />
+      <Event :event='event' />
+      <CommentList :comments='comments' :model_type='"Event"' :model_id='event.id' />
   </div>
 </template>
 <script>
 import Event from './Event'
 import EditableEvent from './EditableEvent.vue'
 import CommentList from './CommentList.vue'
-import {getOneEvent, updateEvent, allMedia} from '../services/events'
-import {allComments, createComment} from '../services/event_comments'
-
+import {resourceId} from '../services/routing'
 export default {
     name: 'ShowEvent',
     components: {CommentList, EditableEvent, Event},
-    data: function() {
-        return {
-            id: parseInt(this.$route.params.id),
-            name: '',
-            theme: '',
-            description: '',
-            start_time: '',
-            end_time: '',
-            parent_id: null,
-            business_id: null,
-            created_at: new Date(),
-            updated_at: new Date(),
-            inViewMode: true,
-            media: [],
-            comments: [],
-            invitations: [],
-            isCommentsLoaded: false,
-        }
-    },
-    created: function() {
-        Promise.all([
-            this.getMedia(),
-            this.getEvent(),
-            this.getComments(),
-        ])
-    },
-    methods: {
-        getMedia: function() {
-            return allMedia(this.id).then(r => this.media = r.data)
+    computed: {
+        event() {
+            return this.$store.getters.event(resourceId(this.$route))
         },
-        getEvent: function() {
-            return getOneEvent(this.id).then(r => {
-                // TODO: Something about this is wrong
-                const event = r.data
-                this.name = event.name
-                this.theme = event.theme
-                this.description = event.description
-                this.start_time = event.start_time
-                this.end_time = event.end_time
-                this.parent_id = event.parent_id
-                this.business_id = event.business_id
-                this.created_at = event.created_at
-                this.updated_at = event.updated_at
-                this.comments = event.comments
-                this.media = event.media
-                this.invitations = event.invitations
-            })
-        },
-        getComments: function() {
-            return allComments(this.id).then(r => {
-                this.comments = r.data
-                this.isCommentsLoaded = true
-            })
-        },
-        addedMedia: function(media) {
-            this.media.push(media)
-        },
-        changeMode: function() {
-            this.inViewMode = !this.inViewMode
-        },
-        event: function() {
-            return {
-                media: this.media,
-                comments: this.comments,
-                invitations: this.invitations,
-                id: this.id,
-                name: this.name,
-                theme: this.theme,
-                description: this.description,
-                start_time: this.start_time,
-                end_time: this.end_time,
-                parent_id: this.parent_id,
-                business_id: this.business_id,
-                created_at: this.created_at,
-                updated_at: this.updated_at,
-            }
-        },
-        reloadComments: function() {
-            this.getComments()
-        },
-        updateEvent: function(event) {
-            updateEvent(event.id, event).then(r => {
-                this.$emit('eventUpdated')
-                this.changeMode()
-                this.$router.go() // Optional update the event from client data
-            })
-        },
-        addComment: function(comment) {
-            createComment(this.id, comment)
-            .then(r => this.comments.push(r.data))
+        comments() {
+            return this.$store.getters.eventComments(resourceId(this.$route))
         }
     }
 }

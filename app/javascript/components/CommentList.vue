@@ -1,16 +1,11 @@
 <template>
   <div id="comment-list">
     <Comment
-      v-on:deleteComment='deleteComment'
-      v-on:commentUpdated='commentUpdated'
       v-for='comment in comments'
       :key='comment.id'
       :comment='comment'
       />
-    <AddComment
-      v-on:commented='commentAdded'
-      v-on:addComment='addComment'
-      :comment='null' />
+    <AddComment :comment='null' :model='model' />
   </div>
 </template>
 <script>
@@ -21,24 +16,13 @@ export default {
     components: {Comment, AddComment},
     props: {
         comments: Array,
+        model_type: String,
+        model_id: Number,
     },
-    methods: {
-        commentAdded: function() {
-            this.$emit('reloadComments')
-        },
-        deleteComment: function() {
-          this.$emit('reloadComments')
-        },
-        commentUpdated: function(update) {
-          this.comments.forEach(comment => {
-            if (update.id && comment.id === update.id) {
-              comment.text = update.text
-            }
-          })
-        },
-        addComment: function(comment) {
-          this.$emit('addComment', comment)
-        }
+    computed: {
+      model() {
+        return {id: this.model_id, type: this.model_type}
+      }
     }
 }
 </script>

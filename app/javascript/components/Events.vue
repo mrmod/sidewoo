@@ -1,8 +1,6 @@
 <template>
   <div id="events">
       <EventList
-        v-on:eventAdded='reloadEvents'
-        v-on:eventDeleted='reloadEvents'
         :events='events' />
   </div>
 </template>
@@ -12,18 +10,13 @@ import EventList from './EventList.vue'
 export default {
     name: 'Events',
     components: {EventList},
-    data: function() {
-        return {
-            events: [],
+    computed: {
+        events() {
+            return this.$store.getters.events
         }
     },
     created: function() {
-        this.reloadEvents()
+        this.$store.dispatch('getAllEvents')
     },
-    methods: {
-        reloadEvents: function() {
-            getAllEvents().then(r => this.events = r.data)
-        }
-    }
 }
 </script>

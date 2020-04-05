@@ -120,11 +120,8 @@ export default {
             if (this.id) {
                 event.id = this.id
             }
-            if (this.isExisting) {
-                this.$emit('updateEvent', event)
-                return
-            }
-            this.$emit('createEvent', event)
+            this.$store.dispatch('saveEvent', event)
+            this.$emit('saveEvent')
         },
         deletedInvitation: function(id) {
             console.log(`Deleting invitation ${id} from ${this.invitations.length}`)
@@ -142,15 +139,7 @@ export default {
             this.showAddEvent = false
             this.errors = null
         },
-        toggleShowAddEvent: function() {
-            this.showAddEvent = !this.showAddEvent
-            // Clear the errors when it is hidden
-            if (!this.showAddEvent) {
-                this.errors = null
-            }
-        },
         cancelCreate: function() {
-            this.toggleShowAddEvent()
             this.$emit('changeMode')
         },
         addMedia: function(fileList) {

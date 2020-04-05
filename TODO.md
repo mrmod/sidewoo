@@ -1,3 +1,31 @@
+# Review on April 2
+
+Things look good so far. Below are the things we talked about and wanted to get done for the next few days.
+
+# Bugs
+* Adding an image to an Event fails to reload the comment data
+* Private posts feature ; tagging in people
+* Refresh of resourceful pages loses the store data since there's no resource information in the route
+
+# Things
+
+* Posts don't need tags right now
+* Posts should be sortable by post.created_at and latest commented
+* Posts should be the default view
+
+# Features
+
+* A side bar of post topics on the left for Posts section (crime & safety, marketplace, civic information, etc)
+* Events calendar
+* Neighborhood creation
+* Posts should show up for the Neighboorhoods selected
+* A side bar allowing the Neighborhood selection in Posts and Events
+
+# Locality
+
+* Select Event radius to display Events from
+* Select Events in Neighborhoods
+
 # Models
 
 ```

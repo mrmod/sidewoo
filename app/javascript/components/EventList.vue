@@ -1,10 +1,8 @@
 <template>
   <div id="event-list">
       <AddEvent
-        :event='newEvent'
-        v-on:eventAdded='$emit("eventAdded")' />
+        :event='newEvent' />
       <Event
-        v-on:eventDeleted='$emit("eventDeleted")'
         v-for='event in events'
         :key='event.id'
         :event='event'

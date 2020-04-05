@@ -4,7 +4,7 @@
         <md-input v-model='text' placeholder='> Add a comment...'></md-input>
         <Errors :errors='errors' />
       </md-field>
-      <md-button @click='createComment'>Save</md-button>
+      <md-button @click='saveComment'>Save</md-button>
   </div>
 </template>
 <script>
@@ -14,6 +14,7 @@ export default {
     components: {Errors},
     props: {
         comment: {type: String, required: false},
+        model: Object,
     },
     data: function() {
         return {
@@ -22,13 +23,14 @@ export default {
         }
     },
     methods: {
-        createComment: function() {
+        saveComment() {
             const comment = {
-                comment_id: this.comment,
+                commentable_id: this.model_id,
+                commentable_type: this.model_type,
                 text: this.text,
-                employee_id: this.$currentUser.employee_id, // Is there a vue-ier way to do this?
+                employee_id: this.$currentUser.employee_id,
             }
-            this.$emit('addComment', comment)
+            this.$store.dispatch('saveComment', {model: this.model, comment})
         }
     }
 }
