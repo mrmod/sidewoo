@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_25_184543) do
+ActiveRecord::Schema.define(version: 2020_04_09_142123) do
 
   create_table "business_group_members", force: :cascade do |t|
     t.integer "business_group_id", null: false
@@ -38,10 +38,10 @@ ActiveRecord::Schema.define(version: 2020_03_25_184543) do
 
   create_table "comments", force: :cascade do |t|
     t.text "text"
-    t.integer "comment_id"
+    t.bigint "comment_id"
     t.integer "employee_id", null: false
     t.string "commentable_type"
-    t.integer "commentable_id"
+    t.bigint "commentable_id"
     t.index ["employee_id"], name: "index_comments_on_employee_id"
   end
 
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2020_03_25_184543) do
     t.boolean "all_day"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.integer "parent_id"
+    t.bigint "parent_id"
     t.integer "business_id", null: false
     t.index ["business_id"], name: "index_events_on_business_id"
   end
@@ -94,8 +94,13 @@ ActiveRecord::Schema.define(version: 2020_03_25_184543) do
     t.string "province"
     t.string "state"
     t.string "postal"
-    t.bigint "locatable_id"
+    t.integer "locatable_id"
     t.string "locatable_type"
+    t.integer "region_id"
+    t.decimal "lat"
+    t.decimal "long"
+    t.boolean "primary", default: false
+    t.index ["region_id"], name: "index_locations_on_region_id"
   end
 
   create_table "media", force: :cascade do |t|
@@ -123,6 +128,13 @@ ActiveRecord::Schema.define(version: 2020_03_25_184543) do
     t.index ["employee_id"], name: "index_posts_on_employee_id"
   end
 
+  create_table "regions", force: :cascade do |t|
+    t.string "name"
+    t.text "points"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "socials", force: :cascade do |t|
     t.string "name"
     t.text "url"
@@ -146,6 +158,7 @@ ActiveRecord::Schema.define(version: 2020_03_25_184543) do
   add_foreign_key "event_invitations", "events"
   add_foreign_key "event_times", "businesses"
   add_foreign_key "events", "businesses"
+  add_foreign_key "locations", "regions"
   add_foreign_key "post_members", "employees"
   add_foreign_key "post_members", "posts"
   add_foreign_key "posts", "employees"

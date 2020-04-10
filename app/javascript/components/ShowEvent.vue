@@ -12,6 +12,9 @@ import {resourceId} from '../services/routing'
 export default {
     name: 'ShowEvent',
     components: {CommentList, EditableEvent, Event},
+    created() {
+        this.$store.dispatch('getEventComments', resourceId(this.$route))
+    },
     computed: {
         event() {
             return this.$store.getters.event(resourceId(this.$route))

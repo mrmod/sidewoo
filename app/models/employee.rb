@@ -1,4 +1,8 @@
 class Employee < ApplicationRecord
+  OWNER_ROLE = 0
+  LEAD_ROLE = 1
+  EMPLOYEE_ROLE = 2
+  
   belongs_to :business
   has_many :posts
   has_many :comments

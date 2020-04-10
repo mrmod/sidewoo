@@ -1,4 +1,5 @@
 class Business < ApplicationRecord
+
     has_many :events
     has_many :employees
     has_many :socials
@@ -12,4 +13,8 @@ class Business < ApplicationRecord
     has_many :media, as: :mediumable
     # has_many :posts, through: :employees
     # has_many :comments, through: :employees
+
+    def is_self_employeed?
+        employee_business.present?
+    end
 end

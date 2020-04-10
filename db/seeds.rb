@@ -5,34 +5,115 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-business = Business.create! name: 'Business', address: '1 Address St. Place, CA 90210', phone: '123-456-7890', email: 'test@sidewoo.com'
-[1,2,3].each do |n|
-  Business.create! name: "Business #{n}", address: "#{n} Business Road Town, CA 9021#{n}", phone: "123-#{n}56-7890", email: "admin#{n}"
-end
-business.tags.create! name: 'BusinessRegion', value: 'Main'
-business.locations.create! address: '1 Downtown St.', city: 'Town', state: 'CA', postal: '90120'
-
-employee = Employee.create! name: 'Employee A', business:business
-employee_b = Employee.create! name: 'Employee B', business:business
-
-event = Event.create! name: 'Event', theme: 'Event Theme', description: 'Description', business: business, start_time: DateTime.now, end_time: DateTime.now
-[1,2,3].each do |n|
-  event.comments.create! text: "Event comment #{n}", employee: employee
-end
-event.comments.create! text: "Event comment from employee B", employee: employee_b
-event.media.create! name:'MainFlyer', url: 'MainFlyerURL'
-[1,2,3].each do |n|
-  event.tags.create! name: "Tag #{n}", value: "Value #{n}", url: "Url#{n}"
+map_data = []
+File.open(File.join(Rails.root, 'sample_regions.json')) do |samples|
+  j = JSON.load samples
+  j.each do |points|
+    map_data.push JSON.load(points)
+  end
 end
 
-post = Post.create! topic: 'Topic', text: 'Text', employee: employee
-post_member = PostMember.create! post: post, employee: employee, role: 0
-[1,2,3].each do |n|
-  post.comments.create! text: "Post comment #{n}", employee: employee
+business = Business.create!(
+  name: Faker::Company.unique.name,
+  address: Faker::Address.street_address,
+  phone: Faker::PhoneNumber.phone_number,
+  email: Faker::Internet.email,
+)
+region = Region.create!(
+  name: Faker::Lorem.word,
+  points: map_data[(rand * map_data.size-1).to_i].to_json,
+)
+business.locations.create!(
+  name: Faker::Cannabis.strain,
+  address: Faker::Address.street_address,
+  city: Faker::Address.city,
+  state: Faker::Address.state,
+  postal: Faker::Address.zip,
+  region: region,
+)
+((rand * 10)+1).to_i.times do
+  b = Business.create!(
+    name: Faker::Company.unique.name,
+    address: Faker::Address.street_address,
+    phone: Faker::PhoneNumber.phone_number,
+    email: Faker::Internet.email,
+  )
+  region = Region.create!(
+    name: Faker::Lorem.word,
+    points: map_data[(rand * map_data.size-1).to_i].to_json,
+  )
+  ((rand * 10)+1).to_i.times do
+
+    b.locations.create!(
+      name: Faker::Cannabis.strain,
+      address: Faker::Address.street_address,
+      city: Faker::Address.city,
+      state: Faker::Address.state,
+      postal: Faker::Address.zip,
+      region: region,
+    )
+  end
 end
-post.comments.create! text: "Post comment from employee B", employee: employee_b
-[1,2,3].each do |n|
-  post.tags.create! name: "Tag #{n}", value: "Value #{n}", url: "Url#{n}"
+Business.all.each do |b|
+  ((rand * 10)+1).to_i.times do
+    role = (rand * 2).to_i + 1 
+    if b.employees.count == 0
+      role = Employee::OWNER_ROLE
+    end
+
+    b.employees.create!(name: Faker::Name.name, role: role)
+  end
 end
-group = BusinessGroup.create! name: 'Group', description: 'Description'
-group_member = BusinessGroupMember.create! business_group: group, business: business
+
+((rand * 10) + 1).to_i.times do
+  e = Event.create!(
+    name: Faker::Subscription.plan,
+    theme: Faker::Marketing.buzzwords,
+    description: Faker::Lorem.paragraph,
+    start_time: Faker::Time.forward(days: (rand * 3).to_i),
+    end_time: Faker::Time.forward(days: (rand * 20).to_i + 4),
+    business: Business.find((rand * Business.count).to_i + 1),
+  )
+  (rand * 5).to_i.times do |n|
+    employee = e.business.employees.sample
+    if n % 2 == 0
+      e.comments.create!(text: Faker::Lorem.paragraph, employee: employee)
+    else
+      e.comments.create!(text: Faker::Lorem.question, employee: employee)
+    end
+  end
+end
+
+((rand * 10)+1).to_i.times do
+  b = Business.all.sample
+  while b.employees.count == 0
+    b = Business.all.sample
+  end
+  p = Post.create!(
+    topic: Faker::Lorem.words.join(" "),
+    text: Faker::Lorem.paragraph,
+    employee: b.employees.sample,
+  )
+  (rand * 5).to_i.times do |n|
+    text = Faker::Lorem.paragraph
+    biz = b
+
+    if n % 2 == 0
+      text = Faker::Lorem.questions.join(". ")
+      biz = Business.all.sample
+      while biz.employees.count == 0
+        biz = Business.all.sample
+      end
+    end
+
+    employee = biz.employees.sample
+
+    p.comments.create!(
+      text: text,
+      employee: employee,
+    )
+  end
+end
+
+# group = BusinessGroup.create! name: "Group", description: "Description"
+# group_member = BusinessGroupMember.create! business_group: group, business: business

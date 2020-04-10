@@ -21,6 +21,26 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * Posts should show up for the Neighboorhoods selected
 * A side bar allowing the Neighborhood selection in Posts and Events
 
+## Feature: Neighborhood creation
+
+When a business creates a location for itself and it isn't inside of any Region then the business should be allowed to draw a new region and be set as the leader of that region.
+
+A location belongs to a Region
+```
+# A REgion has many location
+rails g model Region name:string points:text
+rails g migration AddRegionToLocation region:references
+rails g migration AddLatLongToLocation lat:decimal long:decimal
+rails g migration AddPrimaryToLocation primary:boolean
+sed -i  -e 's/null: false/null: true/' db/migration/*add_region_to_location.rb
+```
+
+### Dev Api Key
+
+`GOOGLE_API_CREDENTIALS`
+
+Restricted to Maps Javascript API from localhost or localhost/*
+
 # Locality
 
 * Select Event radius to display Events from

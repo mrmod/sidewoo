@@ -4,9 +4,7 @@ class Api::V1::EventCommentsController < ApplicationController
         if !@event
             return 404
         end
-        respond_to do |format|
-            format.json { render json: @event.comments }
-        end
+        render json: @event.comments
     end
 
     def create
@@ -29,7 +27,7 @@ class Api::V1::EventCommentsController < ApplicationController
             format.json { render json: @comment }
           end
         rescue ActiveModel::ForbiddenAttributesError => e          
-          render json: {'notFound': params[:id], status: 404 }
+          render json: {'notFound': params[:id]}, status: 404
         end
     end
 

@@ -9,14 +9,22 @@
           SideWoo
         </md-toolbar>
         <md-list>
+
           <md-list-item>
             <router-link tag="span" class="no-decoration" to="/">
               <span class="md-list-item-text">Posts</span>
             </router-link>
           </md-list-item>
+
           <md-list-item>
             <router-link tag="span" class="no-decoration" to="/Events">
               <span class="md-list-item-text">Events</span>
+            </router-link>
+          </md-list-item>
+
+          <md-list-item>
+            <router-link tag="span" class="no-decoration" to="/Me">
+              <span class="md-list-item-text">My Business</span>
             </router-link>
           </md-list-item>
         </md-list>

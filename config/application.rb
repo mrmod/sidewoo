@@ -23,7 +23,7 @@ module Sidewoo
       config.s3.create_bucket bucket: config.media_bucket
     rescue Aws::S3::Errors::BucketAlreadyExists, Aws::S3::Errors::BucketAlreadyOwnedByYou
     end
-
+    config.google_maps_api_key = ENV['GOOGLE_MAPS_API_KEY']
     unless Rails.env.production?
       minio_client = ENV['MINIO_CLIENT']
       minio_url = ENV['MINIO_URL']

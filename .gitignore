@@ -34,3 +34,7 @@
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+mapdata/n*
+mapdata/*.rb
+!mapdata/mapdata.json

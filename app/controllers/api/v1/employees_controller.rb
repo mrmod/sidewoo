@@ -1,7 +1,13 @@
 class Api::V1::EmployeesController < ApplicationController
   def index
-    respond_to do |format|
-      format.json { render json: Employee.all }
+    render json: Employee.all
+  end
+  def show
+    @employee = Employee.find_by_id params[:id]
+    if @employee.present?
+      render json: @employee
+    else
+      render json: null, status: 404
     end
   end
 
