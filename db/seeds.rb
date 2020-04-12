@@ -72,9 +72,9 @@ end
     description: Faker::Lorem.paragraph,
     start_time: Faker::Time.forward(days: (rand * 3).to_i),
     end_time: Faker::Time.forward(days: (rand * 20).to_i + 4),
-    business: Business.find((rand * Business.count).to_i + 1),
+    business: Business.all.sample,
   )
-  (rand * 5).to_i.times do |n|
+  ((rand * 5)+1).to_i.times do |n|
     employee = e.business.employees.sample
     if n % 2 == 0
       e.comments.create!(text: Faker::Lorem.paragraph, employee: employee)

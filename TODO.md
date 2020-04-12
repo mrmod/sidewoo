@@ -6,6 +6,7 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * Adding an image to an Event fails to reload the comment data
 * Private posts feature ; tagging in people
 * Refresh of resourceful pages loses the store data since there's no resource information in the route
+* Editability of Events, Posts, and Comments isn't checking permissions properly
 
 # Things
 
@@ -15,9 +16,9 @@ Things look good so far. Below are the things we talked about and wanted to get 
 
 # Features
 
-* A side bar of post topics on the left for Posts section (crime & safety, marketplace, civic information, etc)
+* A side bar of post topics on the left for Posts section (crime & safety, marketplace, civic information, etc) [Done]
 * Events calendar
-* Neighborhood creation
+* Neighborhood creation [Done]
 * Posts should show up for the Neighboorhoods selected
 * A side bar allowing the Neighborhood selection in Posts and Events
 
@@ -34,12 +35,18 @@ rails g migration AddLatLongToLocation lat:decimal long:decimal
 rails g migration AddPrimaryToLocation primary:boolean
 sed -i  -e 's/null: false/null: true/' db/migration/*add_region_to_location.rb
 ```
-
+s
 ### Dev Api Key
 
 `GOOGLE_API_CREDENTIALS`
 
 Restricted to Maps Javascript API from localhost or localhost/*
+
+### Goals
+
+* Ability to create regions [Done]
+* Ability to see regions for business locations [Done]
+* Ability to create locations for a business
 
 # Locality
 

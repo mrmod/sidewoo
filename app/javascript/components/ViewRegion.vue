@@ -11,7 +11,7 @@ export default {
         return {
             map: null,
             drawingManager: null,
-            zoom: 6,
+            zoom: 10,
         }
     },
     props: {

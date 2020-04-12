@@ -42,7 +42,7 @@ export default {
     },
     computed: {
         isEditor: function() {
-            return true // if the current user is the same as the comment employee_id
+            return this.$currentUser.employee_id === this.comment.employee_id
         }
     },
     created: function() {
