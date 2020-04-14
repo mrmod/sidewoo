@@ -5,14 +5,20 @@ Things look good so far. Below are the things we talked about and wanted to get 
 # Bugs
 * Adding an image to an Event fails to reload the comment data
 * Private posts feature ; tagging in people
-* Refresh of resourceful pages loses the store data since there's no resource information in the route
-* Editability of Events, Posts, and Comments isn't checking permissions properly
+* Refresh of resourceful pages loses the store data since there's no resource information in the route [Done]
+* Editability of Events, Posts, and Comments isn't checking permissions properly [Done]
 
 # Things
 
 * Posts don't need tags right now
 * Posts should be sortable by post.created_at and latest commented
 * Posts should be the default view
+* Who commented and when they commented
+* Maybe make comments more distinct from the rest of the page?
+* Keep the business category information and founding information with the My Business page
+* Neighbors should show the other businesses in the same region
+** Triggered from a click on MyBusiness.Location showing a list of them broken down by category
+* When a region is created, a GoogleBusiness search will find businesses in the region and email them
 
 # Features
 

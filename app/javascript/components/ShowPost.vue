@@ -1,12 +1,16 @@
 <template>
   <div id="post">
-    <Post
+    <Post v-if='isLoaded'
       :post='post'
       :media='media'>
         <TagList :tags='tags' v-on:deleteTag='deleteTag' />
     </Post>
 
-    <CommentList :comments='comments' :model_type='"Post"' :model_id='post.id' />
+    <CommentList 
+      v-if='isLoaded'
+      :comments='comments'
+      :model_type='"Post"'
+      :model_id='post.id' />
   </div>
 </template>
 <script>
@@ -25,20 +29,33 @@ export default {
     data: function() {
         return {
             inViewMode: true,
+            isLoaded: false,
         }
     },
+    mounted() {
+        let id = this.$store.getters.id
+        return Promise.all([
+            this.$store.dispatch('getPostComments', id),
+            this.$store.dispatch('getOnePost', id),
+            this.$store.dispatch('getPostMedia', id),
+        ])
+        .then(() => this.isLoaded = true)
+    },
     computed: {
+        id() {
+            return this.$store.getters.id
+        },
         comments: function() {
-            return this.$store.getters.postComments(parseInt(this.$route.params.id))
+            return this.$store.getters.postComments(this.id)
         },
         post: function() {
-            return this.$store.getters.post(parseInt(this.$route.params.id))
+            return this.$store.getters.post(this.id)
         },
         media: function() {
-            return this.$store.getters.postMedia(parseInt(this.$route.params.id))
+            return this.$store.getters.postMedia(this.id)
         },
         tags: function() {
-            return this.$store.getters.postTags(parseInt(this.$route.params.id))
+            return this.$store.getters.postTags(this.id)
         },
         isEditor: function() {
             return parseInt(this.employee_id) === parseInt(this.$currentUser.employee_id)

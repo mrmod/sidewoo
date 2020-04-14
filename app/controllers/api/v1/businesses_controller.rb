@@ -11,7 +11,7 @@ class Api::V1::BusinessesController < ApplicationController
   # GET /businesses/:business_id/locations
   def show_locations
     @business = Business.find_by_id params[:business_id]
-    render json: @business.locations
+    render json: @business.locations, include: [:region]
   end
 
   # POST /businesses/:business_id/locations
