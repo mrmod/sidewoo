@@ -11,8 +11,9 @@ Things look good so far. Below are the things we talked about and wanted to get 
 # Things
 
 * Posts don't need tags right now [Done]
-* Ability to create locations for a business
-* Posts should be sortable by post.created_at and latest commented
+* Ability to create locations for a business [Done]
+* Ability to add new locations to an existing business
+* Posts should be sortable by `post.created_at` and latest commented
 * Posts should be the default view
 * Who commented and when they commented
 * Maybe make comments more distinct from the rest of the page?
@@ -20,6 +21,8 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * Neighbors should show the other businesses in the same region
 ** Triggered from a click on MyBusiness.Location showing a list of them broken down by category
 * When a region is created, a GoogleBusiness search will find businesses in the region and email them
+* Capture the center for a Places-derived region [Done]
+* Estimate the center for a Business-derived region polygon
 
 # Features
 
@@ -38,6 +41,10 @@ When a Business joins and gives their address, a check should be done to see if 
 ```
 rails g migration AddGooglePlacesToLocation places_id:string places_neighborhood:string
 rails g migration AddEmailToEmployee email:string
+```
+
+```
+rails g migration AddGeoToRegion center_lat:decimal center_lng:decimal
 ```
 
 ## Feature: Neighborhood creation [Done]

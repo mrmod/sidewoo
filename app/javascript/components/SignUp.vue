@@ -356,6 +356,8 @@ export default {
                                 let region = {
                                     name: location.places_neighborhood,
                                     points: JSON.stringify(regionBounds),
+                                    center_lat: vp.getCenter().lat(),
+                                    center_lng: vp.getCenter().lng(),
                                 }
                                 return this.$store.dispatch('createRegion', region)
                                 .then(r => {
