@@ -2,10 +2,10 @@
   <div id="profile">
       <div id="business" v-if='business && employee'>
           <div class="md-display-1">Hello {{employee.name}}!</div>
-          <span class="md-headline">{{business.name}}</span>
-          <span class="md-subheading">{{business.website}}</span>
-          <span class="md-subheading">{{business.website}}</span>
-          <br /> <br />
+          <div class="md-headline">{{business.name}}</div>
+          <div class="md-subheading" v-if='business.website'>
+              <a target="_blank" rel="noopener noreferrer" :href='business.website'>{{business.website}}</a>
+          </div>
       </div>
       <div id="locations">
           <div class="md-display-1">Locations</div>
