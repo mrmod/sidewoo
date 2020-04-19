@@ -1,9 +1,18 @@
 class Api::V1::RegionsController < ApplicationController
+    def index
+        if params[:name]
+            render json: Region.find_by_name(params[:name])
+        else
+            render json: Region.all
+        end
+    end
+
     def create
         @region = Region.create valid_params
-        File.open(File.join(Rails.root, 'sample_regions.json'), 'a+') do |samples|
-            samples.write JSON.dump(valid_params['points']) + ","
-        end
+        # Save regions to create fake regions
+        # File.open(File.join(Rails.root, 'sample_regions.json'), 'a+') do |samples|
+        #     samples.write JSON.dump(valid_params['points']) + ","
+        # end
         if @region.invalid?
             render json: @region.errors, status: 400
         else

@@ -11,3 +11,11 @@ export const getOneEmployee = id => axios.get(oneEmployeeUrl(id), authorizedJSON
         error: null,
     }))
     .catch(railsErrorHandler)
+
+export const createEmployee = employee => axios.post(allEmployeesUrl, {employee}, authorizedJSONHeaders)
+    .then(r => r.data)
+    .then(data => ({
+        data: data,
+        error: null,
+    }))
+    .catch(railsErrorHandler)

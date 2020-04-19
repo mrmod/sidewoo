@@ -30,7 +30,10 @@ export const createBusiness = business => axios.post(allBusinessesUrl, {business
     }))
     .catch(railsErrorHandler)
 
-export const updateOneBusiness = (id, business) => axios.put(
+export const updateBusiness = (business) => {
+    let id = business.id
+    delete business.id
+    return axios.put(
         oneBusinessUrl(id),
         {business},
         authorizedJSONHeaders
@@ -41,8 +44,16 @@ export const updateOneBusiness = (id, business) => axios.put(
         error: null,
     }))
     .catch(railsErrorHandler)
+}
 
 export const deleteOneBusiness = id => axios.delete(oneBusinessUrl(id), authorizedJSONHeaders)
+    .then(r => r.data)
+    .then(data => ({
+        data: data,
+        error: null,
+    }))
+    .catch(railsErrorHandler)
+export const createLocation = (id, location) => axios.post(locationsUrl(id), {location}, authorizedJSONHeaders)
     .then(r => r.data)
     .then(data => ({
         data: data,

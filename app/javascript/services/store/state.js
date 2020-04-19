@@ -14,6 +14,13 @@ export default {
     post: null,
     event: null,
     regions: [],
+
+    signup: {
+        business: {},
+        locations: [],
+        employees: [],
+    },
+
     currentUser: {
         loggedIn: false,
         employee_id: null,

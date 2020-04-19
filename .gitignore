@@ -38,3 +38,5 @@ yarn-debug.log*
 mapdata/n*
 mapdata/*.rb
 !mapdata/mapdata.json
+.env
+.env.development

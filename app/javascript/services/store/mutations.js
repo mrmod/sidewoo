@@ -60,6 +60,9 @@ export default {
     event(state, event) {
         state.event = event
     },
+    regions(state, regions) {
+        state.regions = regions
+    },
     updateEvents(state, event) {
         let index = -1
         state.events.forEach((e, idx) => {
@@ -121,6 +124,19 @@ export default {
             state.regions.push(region)
         }
     },
+    updateBusinessEmployees(state, employee) {
+        let index = -1
+        state.businessEmployees.forEach((e, idx) => {
+            if (e.id === employee.id) {
+                index = idx
+            }
+        })
+        if (index >- 0) {
+            state.businessEmployees[index] = employee
+        } else {
+            state.businessEmployees.push(employee)
+        }
+    },
     updateBusinessLocations(state, location) {
         let index = -1
         state.businessLocations.forEach((l, idx) => {
@@ -134,4 +150,22 @@ export default {
             state.businessLocations.push(location)
         }
     },
+
+
+
+    setSignupBusiness(state, business) {
+        state.signup.business = business
+    },
+    addSignupLocation(state, location) {
+        state.signup.locations.push(location)
+    },
+    deleteSignupLocation(state, index) {
+        state.signup.locations.splice(index, 1)
+    },
+    addSignupEmployee(state, employee) {
+        state.signup.employees.push(employee)
+    },
+    deleteSignupEmployee(state, index) {
+        state.signup.employees.splice(index, 1)
+    }
 }

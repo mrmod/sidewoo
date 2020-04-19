@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   namespace :api do
     resources :businesses, controller: 'v1/businesses' do
       get 'locations', action: :show_locations
+      post 'locations', action: :create_location
       get 'employees', action: :show_employees
       resources :tags, controller: 'v1/tags'
       resources :locations, controller: 'v1/locations'
@@ -52,7 +53,7 @@ Rails.application.routes.draw do
       get 'region', action: :show_region
     end
     resources :locations, controller: 'v1/locations', only: [:update]
-    resources :regions, controller: 'v1/regions', only: [:create, :show]
+    resources :regions, controller: 'v1/regions', only: [:create, :show, :index]
     resources :tags, controller: 'v1/tags'
     resources :media, controller: 'v1/media', only: [:show, :update, :delete]
   end

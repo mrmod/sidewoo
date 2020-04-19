@@ -4,6 +4,12 @@ class Api::V1::LocationsController < ApplicationController
   end
 
   def create
+    @location = Location.create valid_params
+    if @location.invalid?
+      render json: @location.errors, status: 400
+    else
+      render json: @location
+    end
   end
 
   def delete
@@ -11,14 +17,15 @@ class Api::V1::LocationsController < ApplicationController
 
   def update
     @location = Location.find_by_id params[:id]
-    if @location.present?
-      if @location.update valid_params
-        render json: @location
-      else
-        render json: @location.errors, status: 400
-      end
-    else
+    unless @location.present?
       render json: null, status: 404
+      return
+    end
+
+    if @location.update valid_params
+      render json: @location
+    else
+      render json: @location.errors, status: 400
     end
   end
 
@@ -48,6 +55,7 @@ class Api::V1::LocationsController < ApplicationController
         :lat,
         :long,
         :primary,
+        :business_id,
       )
     end
 end

@@ -99,7 +99,6 @@ export default {
                     return []
                 }
             }
-            console.log('no region found for', location.region_id)
             return []
         },
     }

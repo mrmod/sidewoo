@@ -40,7 +40,7 @@ export default {
             region.setMap(this.map)
         })
         .catch(error => {
-            console.log(error)
+            console.error(error)
         })
     },
 }

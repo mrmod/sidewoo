@@ -103,7 +103,6 @@ export default {
             })
         },
         invitedBusiness: function(eventInvitation) {
-            console.log(`Adding invitation`, eventInvitation)
             this.invitations.push(eventInvitation)
             this.businesses = this.businesses.filter(b => b.id !== eventInvitation.guest_business_id)
         },
@@ -124,11 +123,8 @@ export default {
             this.$emit('saveEvent')
         },
         deletedInvitation: function(id) {
-            console.log(`Deleting invitation ${id} from ${this.invitations.length}`)
             let invitation = this.invitations.find(i => i.id === id)
-            console.log('Removing', invitation)
             this.invitations = this.invitations.filter(i => i.id !== invitation.id)
-            console.log('There are now ', this.invitations.length)
         },
         initializeData: function() {
             this.name = ''

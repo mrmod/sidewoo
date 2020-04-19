@@ -15,12 +15,21 @@ export default {
             .then(r => context.commit('businessLocations', r.data)),
         getBusiness: (context, id) => businessesService.getOneBusiness(id)
             .then(r => context.commit('business', r.data)),
+        saveBusiness: (context, business) => businessesService.updateBusiness(business)
+            .then(r => context.commit('business', r.data)),
+        createBusinessLocation: (context, businessLocation) => businessesService.createLocation(
+                businessLocation.business.id,
+                businessLocation.location,
+            )
+            .then(r => context.commit('updateBusinessLocations', r.data)),
         getBusinesses: context => businessesService.allBusinesses()
             .then(r => context.commit('businesses', r.data)),
         getBusinessEmployees: (context, id) => businessesService.getEmployees(id)
             .then(r => context.commit('businessEmployees', {business: parseInt(id), employees: r.data})),
         
         getEmployee: (context, employeeId) => employeesService.getOneEmployee(employeeId)
+            .then(r => context.commit('employee', r.data)),
+        createEmployee: (context, employee) => employeesService.createEmployee(employee)
             .then(r => context.commit('employee', r.data)),
 
         getAllPosts: context => postsService.getAllPosts()
@@ -109,6 +118,8 @@ export default {
                     console.log(`Unsupported comment model ${model.type} for ${model.id}`)
             }
         },
+        getAllRegions: (context) => regionsService.getAllRegions()
+          .then(r => context.commit('regions', r.data)),
         createRegion: (context, region) => regionsService.createRegion(region)
           .then(r => {
               context.commit('updateRegions', r.data)
@@ -120,5 +131,10 @@ export default {
           .then(r => {
               context.commit('updateRegions', r.data)
               return r.data
-          })
+          }),
+        
+
+        setSignupBusiness: (context, business) => context.commit('setSignupBusiness', business),
+        addSignupLocation: (context, location) => context.commit('addSignupLocation', location),
+        addSignupEmployee: (context, employee) => context.commit('addSignupEmployee', employee),
     }

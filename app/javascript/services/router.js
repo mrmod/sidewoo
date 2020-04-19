@@ -13,6 +13,7 @@ import ShowEvent from '../components/ShowEvent.vue'
 import EditEvent from '../components/EditEvent.vue'
 
 import CreateRegion from '../components/CreateRegion.vue'
+import SignUp from '../components/SignUp.vue'
 
 import store from './store'
 
@@ -21,6 +22,7 @@ Vue.use(VueRouter)
 const routes = [
     { path: '/', name: 'Home', component: Posts},
     { path: '/me', name: 'Me', component: Profile},
+    { path: '/signup', name: 'SignUp', component: SignUp},
 
     { path: '/posts', name: 'Posts', component: Posts },
     { path: '/posts/:id', name: 'ShowPost', component: ShowPost },

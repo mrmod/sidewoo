@@ -10,7 +10,8 @@ Things look good so far. Below are the things we talked about and wanted to get 
 
 # Things
 
-* Posts don't need tags right now
+* Posts don't need tags right now [Done]
+* Ability to create locations for a business
 * Posts should be sortable by post.created_at and latest commented
 * Posts should be the default view
 * Who commented and when they commented
@@ -28,13 +29,24 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * Posts should show up for the Neighboorhoods selected
 * A side bar allowing the Neighborhood selection in Posts and Events
 
-## Feature: Neighborhood creation
+## Feature: Check if Business Location in Region
+
+When a Business joins and gives their address, a check should be done to see if that addresses Lat/Long are within an existing Region. If it is, then their Location gets put in that region. If it isn't, they should be able to create a new Region.
+
+### Migrations
+
+```
+rails g migration AddGooglePlacesToLocation places_id:string places_neighborhood:string
+rails g migration AddEmailToEmployee email:string
+```
+
+## Feature: Neighborhood creation [Done]
 
 When a business creates a location for itself and it isn't inside of any Region then the business should be allowed to draw a new region and be set as the leader of that region.
 
 A location belongs to a Region
 ```
-# A REgion has many location
+# A Region has many location
 rails g model Region name:string points:text
 rails g migration AddRegionToLocation region:references
 rails g migration AddLatLongToLocation lat:decimal long:decimal
@@ -52,7 +64,6 @@ Restricted to Maps Javascript API from localhost or localhost/*
 
 * Ability to create regions [Done]
 * Ability to see regions for business locations [Done]
-* Ability to create locations for a business
 
 # Locality
 

@@ -8,6 +8,16 @@ class Api::V1::BusinessesController < ApplicationController
     render json: @business, include: [:locations]
   end
 
+  def update
+    @business = Business.find params[:id]
+    unless @business.present?
+      render json: null, status: 404
+      return
+    end
+    @business.update valid_params
+    render json: @business
+  end
+
   # GET /businesses/:business_id/locations
   def show_locations
     @business = Business.find_by_id params[:business_id]
@@ -45,6 +55,7 @@ class Api::V1::BusinessesController < ApplicationController
         :website,
         :employee_business,
         :handle,
+        :type,
       )
     end
     def valid_location_params
@@ -60,6 +71,8 @@ class Api::V1::BusinessesController < ApplicationController
         :long,
         :primary,
         :region_id,
+        :places_id,
+        :places_neighborhood,
       )
     end
 end

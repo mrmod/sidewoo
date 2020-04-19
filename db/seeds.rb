@@ -12,6 +12,9 @@ File.open(File.join(Rails.root, 'sample_regions.json')) do |samples|
     map_data.push JSON.load(points)
   end
 end
+region_names = 5.times.map do 
+  Faker::Nation.capital_city
+end
 
 business = Business.create!(
   name: Faker::Company.unique.name,
@@ -19,17 +22,21 @@ business = Business.create!(
   phone: Faker::PhoneNumber.phone_number,
   email: Faker::Internet.email,
 )
-region = Region.create!(
-  name: Faker::Lorem.word,
-  points: map_data[(rand * map_data.size-1).to_i].to_json,
-)
+(rand * map_data.size).to_i.times do 
+  region = Region.create!(
+    name: region_names.sample,
+    points: map_data[(rand * map_data.size-1).to_i].to_json,
+  )
+end
 business.locations.create!(
   name: Faker::Cannabis.strain,
   address: Faker::Address.street_address,
   city: Faker::Address.city,
   state: Faker::Address.state,
   postal: Faker::Address.zip,
-  region: region,
+  region: Region.all.sample,
+  places_neighborhood: region_names.sample,
+  places_id: 'place_id',
 )
 ((rand * 10)+1).to_i.times do
   b = Business.create!(
@@ -38,10 +45,7 @@ business.locations.create!(
     phone: Faker::PhoneNumber.phone_number,
     email: Faker::Internet.email,
   )
-  region = Region.create!(
-    name: Faker::Lorem.word,
-    points: map_data[(rand * map_data.size-1).to_i].to_json,
-  )
+
   ((rand * 10)+1).to_i.times do
 
     b.locations.create!(
@@ -50,7 +54,9 @@ business.locations.create!(
       city: Faker::Address.city,
       state: Faker::Address.state,
       postal: Faker::Address.zip,
-      region: region,
+      region: Region.all.sample,
+      places_neighborhood: region_names.sample,
+      places_id: 'place_id',
     )
   end
 end
@@ -61,7 +67,7 @@ Business.all.each do |b|
       role = Employee::OWNER_ROLE
     end
 
-    b.employees.create!(name: Faker::Name.name, role: role)
+    b.employees.create!(name: Faker::Name.name, role: role, email: Faker::Internet.email)
   end
 end
 
@@ -115,5 +121,6 @@ end
   end
 end
 
+Region.create!(name: Region::NEW_BUSINESS_REGION)
 # group = BusinessGroup.create! name: "Group", description: "Description"
 # group_member = BusinessGroupMember.create! business_group: group, business: business
