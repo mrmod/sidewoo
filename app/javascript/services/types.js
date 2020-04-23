@@ -31,6 +31,7 @@ export const Employee = {
     business_id: Number,
     role: Number,
     handle: String,
+    location_id: Number,
 }
 export const EmployeeRole = {
     owner: 0,
@@ -46,6 +47,7 @@ export const Post = {
     text: String,
     private: Boolean,
     employee_id: Number,
+    region_id: Number,
 }
 export const Event = {
     name: String,
@@ -56,6 +58,7 @@ export const Event = {
     end_time: String,
     parent_id: Number,
     business_id: Number,
+    region_id: Number,
 }
 export const Comment = {
     text: String,

@@ -52,8 +52,11 @@ Rails.application.routes.draw do
     resources :locations, controller: 'v1/locations' do
       get 'region', action: :show_region
     end
-    resources :locations, controller: 'v1/locations', only: [:update]
-    resources :regions, controller: 'v1/regions', only: [:create, :show, :index]
+    resources :locations, controller: 'v1/locations', only: [:update, :show]
+    resources :regions, controller: 'v1/regions', only: [:create, :show, :index] do
+      get 'posts', action: :show_posts
+      get 'events', action: :show_events
+    end
     resources :tags, controller: 'v1/tags'
     resources :media, controller: 'v1/media', only: [:show, :update, :delete]
   end

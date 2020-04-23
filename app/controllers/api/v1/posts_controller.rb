@@ -1,46 +1,33 @@
 class Api::V1::PostsController < ApplicationController
   def index
-
-    respond_to do |format|
-      format.json { render json: Post.all, include: :tags }
-    end
+    render json: Post.all, include: :tags
   end
+
   def show
     @post = Post.find_by_id params[:id]
-    respond_to do |format|
-      format.json { render json: @post, include: :tags}
-    end
+    render json: @post, include: :tags
   end
 
   def create
     @post = Post.create valid_params
-    respond_to do |format|
-      format.json {render json: @post }
-    end
+    render json: @post
   end
 
   def destroy
     begin
       Post.destroy params[:id]
-      respond_to do |format|
-        format.json { render json: {id: params[:id]} }
-      end
+      render json: {id: params[:id]}
     rescue ActiveRecord::RecordNotFound
-      respond_to do |format|
-        format.json { render json: {}, status: 404 }
-      end
+      render json: null, status: 404
     end
   end
 
   def update
     begin
       @post = Post.update params[:id], valid_params
-      respond_to do |format|
-        format.json { render json: @post, include: :tags }
-      end
+      render json: @post, include: :tags
     rescue ActiveModel::ForbiddenAttributesError => e
-      puts "Error: #{e} #{params}"
-      render json: {'notFound': params[:id], status: 404 }
+      render json: {'notFound': params[:id]}, status: 404
     end
   end
 

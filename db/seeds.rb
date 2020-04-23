@@ -6,13 +6,13 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 map_data = []
-File.open(File.join(Rails.root, 'sample_regions.json')) do |samples|
+File.open(File.join(Rails.root, "sample_regions.json")) do |samples|
   j = JSON.load samples
   j.each do |points|
     map_data.push JSON.load(points)
   end
 end
-region_names = 5.times.map do 
+region_names = 5.times.map do
   Faker::Nation.capital_city
 end
 
@@ -22,10 +22,10 @@ business = Business.create!(
   phone: Faker::PhoneNumber.phone_number,
   email: Faker::Internet.email,
 )
-(rand * map_data.size).to_i.times do 
+(rand * map_data.size).to_i.times do
   region = Region.create!(
     name: region_names.sample,
-    points: map_data[(rand * map_data.size-1).to_i].to_json,
+    points: map_data[(rand * map_data.size - 1).to_i].to_json,
   )
 end
 business.locations.create!(
@@ -36,9 +36,9 @@ business.locations.create!(
   postal: Faker::Address.zip,
   region: Region.all.sample,
   places_neighborhood: region_names.sample,
-  places_id: 'place_id',
+  places_id: "place_id",
 )
-((rand * 10)+1).to_i.times do
+((rand * 10) + 1).to_i.times do
   b = Business.create!(
     name: Faker::Company.unique.name,
     address: Faker::Address.street_address,
@@ -46,8 +46,7 @@ business.locations.create!(
     email: Faker::Internet.email,
   )
 
-  ((rand * 10)+1).to_i.times do
-
+  ((rand * 10) + 1).to_i.times do
     b.locations.create!(
       name: Faker::Cannabis.strain,
       address: Faker::Address.street_address,
@@ -56,18 +55,18 @@ business.locations.create!(
       postal: Faker::Address.zip,
       region: Region.all.sample,
       places_neighborhood: region_names.sample,
-      places_id: 'place_id',
+      places_id: "place_id",
     )
   end
 end
 Business.all.each do |b|
-  ((rand * 10)+1).to_i.times do
-    role = (rand * 2).to_i + 1 
+  ((rand * 10) + 1).to_i.times do
+    role = (rand * 2).to_i + 1
     if b.employees.count == 0
       role = Employee::OWNER_ROLE
     end
 
-    b.employees.create!(name: Faker::Name.name, role: role, email: Faker::Internet.email)
+    b.employees.create!(name: Faker::Name.name, role: role, email: Faker::Internet.email, location: Location.all.sample)
   end
 end
 
@@ -79,8 +78,9 @@ end
     start_time: Faker::Time.forward(days: (rand * 3).to_i),
     end_time: Faker::Time.forward(days: (rand * 20).to_i + 4),
     business: Business.all.sample,
+    region: Region.all.sample,
   )
-  ((rand * 5)+1).to_i.times do |n|
+  ((rand * 5) + 1).to_i.times do |n|
     employee = e.business.employees.sample
     if n % 2 == 0
       e.comments.create!(text: Faker::Lorem.paragraph, employee: employee)
@@ -90,7 +90,7 @@ end
   end
 end
 
-((rand * 10)+1).to_i.times do
+((rand * 10) + 1).to_i.times do
   b = Business.all.sample
   while b.employees.count == 0
     b = Business.all.sample
@@ -99,6 +99,7 @@ end
     topic: Faker::Lorem.words.join(" "),
     text: Faker::Lorem.paragraph,
     employee: b.employees.sample,
+    region: Region.all.sample,
   )
   (rand * 5).to_i.times do |n|
     text = Faker::Lorem.paragraph

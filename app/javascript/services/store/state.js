@@ -22,11 +22,16 @@ export default {
     },
 
     currentUser: {
-        loggedIn: false,
-        employee_id: null,
-        business_id: null,
+        loggedIn: true,
+        isAuthenticating: false,
+        employee_id: 1,
+        business_id: 1,
+        location_id: 1,
         name: null,
         email: null,
         session: null,
+        employee: {},
+        location: {},
+        region: {},
     }
 }

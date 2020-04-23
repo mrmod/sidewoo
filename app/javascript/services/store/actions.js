@@ -11,28 +11,59 @@ import * as employeesService from '../employees'
 const isPresent = (t) => typeof(t) !== 'undefined' && t !== null
 
 export default {
+// BUSINESS
         getBusinessLocations: (context, businessId) => businessesService.getLocations(businessId)
             .then(r => context.commit('businessLocations', r.data)),
         getBusiness: (context, id) => businessesService.getOneBusiness(id)
-            .then(r => context.commit('business', r.data)),
+            .then(r => {
+                context.commit('business', r.data)
+                return r.data
+            }),
         saveBusiness: (context, business) => businessesService.updateBusiness(business)
-            .then(r => context.commit('business', r.data)),
+            .then(r => {
+                context.commit('business', r.data)
+                return r.data
+            }),
+        // Returns: Location
         createBusinessLocation: (context, businessLocation) => businessesService.createLocation(
                 businessLocation.business.id,
                 businessLocation.location,
             )
-            .then(r => context.commit('updateBusinessLocations', r.data)),
+            .then(r => {
+                context.commit('updateBusinessLocations', r.data)
+                return r.data
+            }),
         getBusinesses: context => businessesService.allBusinesses()
-            .then(r => context.commit('businesses', r.data)),
+            .then(r => {
+                context.commit('businesses', r.data)
+                return r.data
+            }),
+// EMPLOYEES
         getBusinessEmployees: (context, id) => businessesService.getEmployees(id)
             .then(r => context.commit('businessEmployees', {business: parseInt(id), employees: r.data})),
         
         getEmployee: (context, employeeId) => employeesService.getOneEmployee(employeeId)
-            .then(r => context.commit('employee', r.data)),
+            .then(r => {
+                context.commit('employee', r.data)
+                return r.data
+            }),
         createEmployee: (context, employee) => employeesService.createEmployee(employee)
-            .then(r => context.commit('employee', r.data)),
-
+            .then(r => {
+                context.commit('employee', r.data)
+                return r.data
+            }),
+        saveEmployee: (context, employee) => employeesService.saveEmployee(employee)
+            .then(r => {
+                context.commit('employee', r.data)
+                return r.data
+            }),
+// POSTS
         getAllPosts: context => postsService.getAllPosts()
+          .then(r => {
+              context.commit('posts', r.data)
+              return r.data
+          }),
+        getRegionalPosts: (context, id) => regionsService.getPosts(id)
           .then(r => context.commit('posts', r.data)),
         getOnePost: (context, id) => postsService.getOnePost(id)
           .then(r => context.commit('updatePosts', r.data)),
@@ -65,9 +96,14 @@ export default {
         deletePost: (context, id) => postsService.deletePost(id)
             .then(() => context.commit('deletePost', id)),
 
-
+// EVENTS
         getAllEvents: context => eventsService.getAllEvents()
             .then(r => context.commit('events', r.data)),
+        getRegionalEvents: (context, id) => regionsService.getEvents(id)
+          .then(r => {
+              context.commit('events', r.data)
+              return r.data
+          }),
         getOneEvent: (context, id) => eventsService.getOneEvent(id)
             .then(r => context.commit('updateEvents', r.data)),
         getEventComments: (context, id) => eventsService.getEventComments(id)
@@ -98,7 +134,7 @@ export default {
         },
         deleteEvent: (context, id) => eventsService.deleteEvent(id)
             .then(() => context.commit('deleteEvent', id)),
-
+// COMMENTS
         deleteComment: (context, id) => commentsService.deleteComment(id)
             .then(() => context.commit('deleteComment', id)),
         saveComment: (context, data) => {
@@ -118,6 +154,7 @@ export default {
                     console.log(`Unsupported comment model ${model.type} for ${model.id}`)
             }
         },
+// REGIONS and LOCATIONS   
         getAllRegions: (context) => regionsService.getAllRegions()
           .then(r => context.commit('regions', r.data)),
         createRegion: (context, region) => regionsService.createRegion(region)
@@ -132,9 +169,72 @@ export default {
               context.commit('updateRegions', r.data)
               return r.data
           }),
-        
-
+        getLocation: (context, id) => locationsService.getOneLocation(id)
+          .then(r => {
+              context.commit('currentUserLocation', r.data)
+              return r.data
+          }),
+        getRegion: (context, locationId) => locationsService.getRegion(locationId)
+          .then(r => {
+              context.commit('currentUserRegion', r.data)
+              return r.data
+          }),
+        getDefaultRegion: (context) => regionsService.getDefault()
+          .then(r => {
+              context.commit('updateRegions', r.data)
+              return r.data
+          }),
+// SIGNUP
         setSignupBusiness: (context, business) => context.commit('setSignupBusiness', business),
         addSignupLocation: (context, location) => context.commit('addSignupLocation', location),
         addSignupEmployee: (context, employee) => context.commit('addSignupEmployee', employee),
+
+// AUTH and LOGIN
+        isAuthenticating: (context) => context.commit('currentUser', {
+            loggedIn: false,
+            isAuthenticating: true,
+        }),
+        // Returns nothing of value
+        // Sets the current location of the logged in user to that given
+        setCurrentUserLocation: ({dispatch, commit, state}, location) => {
+
+            return Promise.all([
+                // Persist the new primary location ID to the database
+                // then update the store
+                dispatch('getEmployee', state.currentUser.employee_id)
+                    .then(employee => dispatch(
+                        'saveEmployee', 
+                        Object.assign({}, employee, {location_id: location.id})
+                    ))
+                    .then(employee => commit('currentUserEmployee', employee)),
+                // Get the latest server location at update the currentUser
+                dispatch('getLocation', location.id)
+                    .then(l => commit('currentUserLocation', l)),
+            
+                dispatch('getRegion', location.id)
+                    .then(region => commit('currentUserRegion', region)),
+            ])
+        },
+        login: ({dispatch, commit, state}, employeeId) => {
+            return dispatch('getEmployee', employeeId)
+            .then(employee => {
+                commit('currentUser', {
+                    loggedIn: true,
+                    employee_id: employee.id,
+                    business_id: employee.business_id,
+                    email: employee.email,
+                    name: employee.name,
+                    location_id: employee.location_id,
+                    employee: employee,
+                })
+                return dispatch('getRegion', employee.location_id)
+                .then(() => dispatch('getBusiness', employee.business_id))
+            })
+            .then(business => Promise.all([
+                dispatch('getBusinessLocations', business.id),
+                dispatch('getBusinessEmployees', business.id),
+                dispatch('getRegionalPosts', state.currentUser.region.id),
+                dispatch('getRegionalEvents', state.currentUser.region.id),
+            ]))
+        }
     }

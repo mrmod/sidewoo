@@ -12,7 +12,13 @@ class Api::V1::LocationsController < ApplicationController
     end
   end
 
-  def delete
+  def show
+    @location = Location.find params[:id]
+    if @location.present?
+      render json: @location
+    else
+      render json: null, status: 404
+    end
   end
 
   def update

@@ -2,6 +2,8 @@ class Api::V1::RegionsController < ApplicationController
     def index
         if params[:name]
             render json: Region.find_by_name(params[:name])
+        elsif params[:default]
+            render json: Region.find_by_name(Region::NEW_BUSINESS_REGION)
         else
             render json: Region.all
         end
@@ -25,7 +27,27 @@ class Api::V1::RegionsController < ApplicationController
         if @region.present?
             render json: @region
         else
-            render json: null, status: 404
+            render json: nil, status: 404
+        end
+    end
+
+    # GET /regions/:region_id/posts
+    def show_posts
+        @region = Region.find_by_id params[:region_id]
+        if @region.present?
+            render json: @region.posts
+        else
+            render json: nil, status: 404
+        end
+    end
+
+    # GET /regions/:region_id/events
+    def show_events
+        @region = Region.find_by_id params[:region_id]
+        if @region.present?
+            render json: @region.events
+        else
+            render json: nil, status: 404
         end
     end
 
@@ -33,7 +55,9 @@ class Api::V1::RegionsController < ApplicationController
         def valid_params
             params.require(:region).permit(
                 :name,
-                :points
+                :points,
+                :center_lat,
+                :center_lng,
             )
         end
 end

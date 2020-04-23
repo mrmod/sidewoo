@@ -1,6 +1,8 @@
 <template>
     <div id="draw-region" ref="drawRegion">
-    
+      <div v-if="points === null" class="no-region">
+          <span class="md-title">Create a neighborhood boundary</span>
+      </div>
     </div>
 </template>
 <script>
@@ -19,6 +21,9 @@ export default {
     },
     mounted() {
         let vm = this
+        if (this.points === null) {
+            return
+        }
         initGoogle.then(google => {
 
             this.map = new google.maps.Map(
@@ -47,6 +52,14 @@ export default {
 </script>
 <style scoped>
 #draw-region {
+    width: 320px;
+    height: 320px;
+}
+.no-region {
+    background-color: rgba(240, 240, 240, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100%;
     width: 100%;
     min-width: 320px;

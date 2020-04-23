@@ -15,7 +15,7 @@ export default {
         },
     },
     created: function() {
-        this.$store.dispatch('getAllPosts')
+        this.$store.dispatch('getRegionalPosts', this.$store.state.currentUser.region.id)
     }
 }
 </script>

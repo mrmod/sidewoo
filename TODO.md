@@ -14,7 +14,7 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * Ability to create locations for a business [Done]
 * Ability to add new locations to an existing business
 * Posts should be sortable by `post.created_at` and latest commented
-* Posts should be the default view
+* Posts should be the default view [Done]
 * Who commented and when they commented
 * Maybe make comments more distinct from the rest of the page?
 * Keep the business category information and founding information with the My Business page
@@ -23,14 +23,19 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * When a region is created, a GoogleBusiness search will find businesses in the region and email them
 * Capture the center for a Places-derived region [Done]
 * Estimate the center for a Business-derived region polygon
+* Allow add/remove/modify of business employees after a business is created
+
+* **BUG** Toggling a location on and off in the locations step of SignUp throws errors 
+* Ensure employee addresses are unique for employees of a business
+* Set the Region of a registering businesses's first employee to that of the Primary Location during SignUp
 
 # Features
 
 * A side bar of post topics on the left for Posts section (crime & safety, marketplace, civic information, etc) [Done]
 * Events calendar
 * Neighborhood creation [Done]
-* Posts should show up for the Neighboorhoods selected
-* A side bar allowing the Neighborhood selection in Posts and Events
+* Posts should show up for the Region of the logged in Employee by default [Done]
+* A side bar allowing the Neighborhood selection for Posts and Events
 
 ## Feature: Check if Business Location in Region
 
@@ -43,8 +48,19 @@ rails g migration AddGooglePlacesToLocation places_id:string places_neighborhood
 rails g migration AddEmailToEmployee email:string
 ```
 
+#### Hinting about the center of a region
 ```
 rails g migration AddGeoToRegion center_lat:decimal center_lng:decimal
+```
+
+#### Region of where a post is from
+
+To put a Post/Event in many regions, one Post/Event per Region is created
+
+```
+rails g migration AddRegionToPost region:references
+rails g migration AddRegionToEvent region:references
+rails g migration AddLocationToEmployee location:references
 ```
 
 ## Feature: Neighborhood creation [Done]

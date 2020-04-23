@@ -6,12 +6,14 @@
       </md-app-toolbar>
       <md-app-drawer md-permanent="full">
         <md-toolbar md-elevation="0">
-          SideWoo
+          <span class="md-headline">SideWoo</span>
         </md-toolbar>
+        <div class="region md-title">{{region.name}}</div>
+
         <md-list>
 
           <md-list-item>
-            <router-link tag="span" class="no-decoration" to="/">
+            <router-link tag="span" class="no-decoration" to="/Posts">
               <span class="md-list-item-text">Posts</span>
             </router-link>
           </md-list-item>
@@ -36,17 +38,17 @@
   </div>
 </template>
 <script>
-import Posts from './Posts.vue'
 export default {
     name: 'Home',
-    components: {Posts},
     computed: {
-      pageTitle: function() {
+      pageTitle() {
         return this.$store.getters.title
+      },
+      region() {
+        return this.$store.state.currentUser.region
       }
     }
 }
 </script>
 <style lang="sass">
-
 </style>

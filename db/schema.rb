@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_19_152704) do
+ActiveRecord::Schema.define(version: 2020_04_21_160357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "business_group_members", force: :cascade do |t|
-    t.integer "business_group_id", null: false
-    t.integer "business_id", null: false
+    t.bigint "business_group_id", null: false
+    t.bigint "business_id", null: false
     t.index ["business_group_id"], name: "index_business_group_members_on_business_group_id"
     t.index ["business_id"], name: "index_business_group_members_on_business_id"
   end
@@ -41,27 +41,29 @@ ActiveRecord::Schema.define(version: 2020_04_19_152704) do
 
   create_table "comments", force: :cascade do |t|
     t.text "text"
-    t.integer "comment_id"
-    t.integer "employee_id", null: false
+    t.bigint "comment_id"
+    t.bigint "employee_id", null: false
     t.string "commentable_type"
-    t.integer "commentable_id"
+    t.bigint "commentable_id"
     t.index ["employee_id"], name: "index_comments_on_employee_id"
   end
 
   create_table "employees", force: :cascade do |t|
     t.string "name"
-    t.integer "business_id", null: false
+    t.bigint "business_id", null: false
     t.integer "role", default: 0
     t.string "handle"
     t.string "email"
+    t.bigint "location_id", null: false
     t.index ["business_id"], name: "index_employees_on_business_id"
+    t.index ["location_id"], name: "index_employees_on_location_id"
   end
 
   create_table "event_invitations", force: :cascade do |t|
     t.text "name"
-    t.integer "host_business_id"
-    t.integer "guest_business_id"
-    t.integer "event_id", null: false
+    t.bigint "host_business_id"
+    t.bigint "guest_business_id"
+    t.bigint "event_id", null: false
     t.string "redemption_code"
     t.index ["event_id"], name: "index_event_invitations_on_event_id"
   end
@@ -74,7 +76,7 @@ ActiveRecord::Schema.define(version: 2020_04_19_152704) do
     t.datetime "start_time"
     t.datetime "end_date"
     t.datetime "end_time"
-    t.integer "business_id", null: false
+    t.bigint "business_id", null: false
     t.index ["business_id"], name: "index_event_times_on_business_id"
   end
 
@@ -85,9 +87,11 @@ ActiveRecord::Schema.define(version: 2020_04_19_152704) do
     t.boolean "all_day"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.integer "parent_id"
-    t.integer "business_id", null: false
+    t.bigint "parent_id"
+    t.bigint "business_id", null: false
+    t.bigint "region_id", null: false
     t.index ["business_id"], name: "index_events_on_business_id"
+    t.index ["region_id"], name: "index_events_on_region_id"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -98,9 +102,9 @@ ActiveRecord::Schema.define(version: 2020_04_19_152704) do
     t.string "province"
     t.string "state"
     t.string "postal"
-    t.integer "locatable_id"
+    t.bigint "locatable_id"
     t.string "locatable_type"
-    t.integer "region_id"
+    t.bigint "region_id"
     t.decimal "lat"
     t.decimal "long"
     t.boolean "primary", default: false
@@ -119,8 +123,8 @@ ActiveRecord::Schema.define(version: 2020_04_19_152704) do
   end
 
   create_table "post_members", force: :cascade do |t|
-    t.integer "post_id", null: false
-    t.integer "employee_id", null: false
+    t.bigint "post_id", null: false
+    t.bigint "employee_id", null: false
     t.integer "role", default: 0
     t.index ["employee_id"], name: "index_post_members_on_employee_id"
     t.index ["post_id"], name: "index_post_members_on_post_id"
@@ -130,8 +134,10 @@ ActiveRecord::Schema.define(version: 2020_04_19_152704) do
     t.text "topic"
     t.text "text"
     t.boolean "private", default: false
-    t.integer "employee_id", null: false
+    t.bigint "employee_id", null: false
+    t.bigint "region_id", null: false
     t.index ["employee_id"], name: "index_posts_on_employee_id"
+    t.index ["region_id"], name: "index_posts_on_region_id"
   end
 
   create_table "regions", force: :cascade do |t|
@@ -147,7 +153,7 @@ ActiveRecord::Schema.define(version: 2020_04_19_152704) do
     t.string "name"
     t.text "url"
     t.string "handle"
-    t.integer "business_id", null: false
+    t.bigint "business_id", null: false
     t.index ["business_id"], name: "index_socials_on_business_id"
   end
 
@@ -163,12 +169,15 @@ ActiveRecord::Schema.define(version: 2020_04_19_152704) do
   add_foreign_key "business_group_members", "businesses"
   add_foreign_key "comments", "employees"
   add_foreign_key "employees", "businesses"
+  add_foreign_key "employees", "locations"
   add_foreign_key "event_invitations", "events"
   add_foreign_key "event_times", "businesses"
   add_foreign_key "events", "businesses"
+  add_foreign_key "events", "regions"
   add_foreign_key "locations", "regions"
   add_foreign_key "post_members", "employees"
   add_foreign_key "post_members", "posts"
   add_foreign_key "posts", "employees"
+  add_foreign_key "posts", "regions"
   add_foreign_key "socials", "businesses"
 end

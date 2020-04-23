@@ -26,6 +26,16 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def update
+    @employee = Employee.find params[:id]
+    unless @employee.present?
+      render json: null, status: 404
+      return
+    end
+    if @employee.update valid_params
+      render json: @employee
+    else
+      render json: @employee.errors, status: 400
+    end
   end
 
   private
@@ -34,6 +44,7 @@ class Api::V1::EmployeesController < ApplicationController
         :name,
         :email,
         :business_id,
+        :location_id,
         :handle,
         :role,
       )

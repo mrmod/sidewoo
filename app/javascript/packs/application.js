@@ -19,8 +19,6 @@ import Vue from 'vue/dist/vue.esm' // https://vuejs.org/v2/guide/installation.ht
 
 import store from '../services/store'
 import router from '../services/router'
-// Components
-import Home from '../components/Home.vue'
 
 // Material
 import {
@@ -61,12 +59,11 @@ Vue.prototype.$currentUser = {
 const app = new Vue({
     store,
     router,
-    components: {Home},
     mounted() {
         this.$store.dispatch('getBusiness', this.$currentUser.business_id)
         this.$store.dispatch('getBusinessLocations', this.$currentUser.business_id)
     },
-    template: "<div><Home /></div>",
+    template: "<div><router-view></router-view></div>",
 })
 
 document.addEventListener('DOMContentLoaded', () => {

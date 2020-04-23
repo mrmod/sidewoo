@@ -19,3 +19,15 @@ export const createEmployee = employee => axios.post(allEmployeesUrl, {employee}
         error: null,
     }))
     .catch(railsErrorHandler)
+
+export const saveEmployee = employee => {
+    let id = employee.id
+    delete employee.id
+    return axios.put(oneEmployeeUrl(id), {employee}, authorizedJSONHeaders)
+        .then(r => r.data)
+        .then(data => ({
+            data: data,
+            error: null,
+        }))
+        .catch(railsErrorHandler)
+}

@@ -22,8 +22,7 @@
           </md-step>
 
           <md-step id="setupLocations" :md-label='steps.setupLocations.label' :md-done.sync='steps.setupLocations.isDone'>
-              Add one or more locations each is put in the NEW_BUSINESS_REGION unless their points
-              are in an existing region polygon
+
               <md-list>
                   <md-list-item v-for='l in locations' :key='l.places_id'>
                       <md-icon v-if='l.primary' class="md-primary">star</md-icon>
@@ -53,6 +52,7 @@
                           <span>{{e.name}}</span>
                           <span>{{e.email}}</span>
                           <span>{{employeeRole(e)}}</span>
+                          <span>{{locations[e.location_id].address}}</span>
                       </div>
                   </md-list-item>
               </md-list>
@@ -69,6 +69,13 @@
                       <md-option value=1>Lead</md-option>
                       <md-option value=2>Employee</md-option>
                       <md-option value=0>Co-owner</md-option>
+                  </md-select>
+              </md-field>
+              <md-field>
+                  <md-select v-model='employee.location_id' required>
+                      <md-option v-for="(l, idx) in locations" :key="idx" :value="idx">
+                          {{l.address}}
+                      </md-option>
                   </md-select>
               </md-field>
               <md-button class="md-raised" @click='addEmployee'>Add Another Employee</md-button>
@@ -99,6 +106,7 @@
                           <span>{{e.name}}</span>
                           <span>{{e.email}}</span>
                           <span>{{employeeRole(e)}}</span>
+                          <span>{{locations[e.location_id].address}}</span>
                       </div>
                   </md-list-item>
               </md-list>
@@ -127,7 +135,7 @@ export default {
             selectedLocation: null,
             region_id: null,
             business: {
-                id: this.$currentUser.business_id,
+                id: null,
                 name: '', address: '', phone: '', email: '', website: '',
                 type: '', employee_business: false,
             },
@@ -135,7 +143,13 @@ export default {
                 name: '', address: '', city: '', country: '', province: '', state: '',
                 postal: '', lat: '', long: '', primary: false,
             },
-            employee: { name: '', role: EmployeeRole.employee, handle: '', email: ''},
+            employee: {
+                name: '',
+                role: EmployeeRole.employee,
+                handle: '',
+                email: '',
+                location_id: this.primaryLocationIndex || 0,
+            },
 
             steps: {
                 newBusiness: {
@@ -179,6 +193,15 @@ export default {
                 console.dir(this.$store.state.signup)
             }
         },
+        primaryLocationIndex() {
+            let index = 0
+            this.$store.state.signup.locations.forEach((l, idx) => {
+                if (l.primary) {
+                    index = idx
+                }
+            })
+            return index
+        },
         nonPrimaryLocations() {
             try {
                 return this.$store.state.signup.locations.filter(l => !l.primary)
@@ -211,22 +234,64 @@ export default {
             return this.activeStep
         },
         completeSignUp() {
-            let promises = this.locations.map(location => this.$store.dispatch(
-                'createBusinessLocation', {
-                    business: this.business,
-                    location: location,
-                }))
-            promises = promises.concat(
-                this.employees.map(employee => this.$store.dispatch(
-                    'createEmployee',
-                    Object.assign({}, employee, {business_id: this.business.id})
-                ))
-            )
-            promises.push(
-                this.$store.dispatch('saveBusiness', this.business)
-            )
+            let business = Object.assign({}, this.business, {
+                id: this.$store.state.currentUser.business_id,
+            })
 
-            return Promise.all(promises)
+            let locationPromises = this.locations.map((location, idx) => {
+
+                console.log('Creating location promise using', location)
+                return this.$store.dispatch(
+                    'createBusinessLocation', {
+                        business: business,
+                        location: location,
+                })
+                .then(dbLocation => ({
+                    location: dbLocation,
+                    idx: idx,
+                }))
+            })
+            // TODO: Update the logged in employee's location to the 
+            //       primary location of the business
+
+            console.log('Updating business', business)
+            // Create a new business
+            return this.$store.dispatch('saveBusiness', business)
+            .then(b => this.business = b)
+            /// Create locations
+            .then(() => Promise.all(locationPromises))
+            // Create employees
+            .then(indexedLocations => {
+                console.log('Assiginging employees business id from ', this.business)
+                // Select the location matching the employee's assignment
+                let creatableEmployees = []
+                this.employees.forEach(e => {
+                    let matchedLocation = indexedLocations.find(l => l.idx === e.location_id)
+                    if (matchedLocation) {
+                        let employee = Object.assign({}, e, {
+                            business_id: this.business.id,
+                            location_id: matchedLocation.location.id,
+                        })
+                        console.log('Adding creatable employee', employee)
+                        creatableEmployees.push(employee)
+                    } else {
+                        console.error(`Could not find location index ${l} for employee ${e.name}`)
+                        console.log('Locations data: ', indexedLocations)
+                    }
+                })
+                let employeePromises = creatableEmployees.map(e => this.$store.dispatch(
+                    'createEmployee',
+                    e
+                ))
+                let primaryLocation = indexedLocations.find(l => l.location.primary)
+                console.log('Updating currentusers location to', primaryLocation)
+                if (primaryLocation) {
+                    employeePromises.push(
+                        this.$store.dispatch('setCurrentUserLocation', primaryLocation.location)
+                    )
+                }
+                return Promise.all(employeePromises)
+            })
             .then(() => this.$router.push('/me'))
             .catch(err => {
                 console.error(err)
@@ -269,12 +334,15 @@ export default {
         },
         addEmployee() {
             this.employee.role = parseInt(this.employee.role)
+            this.employee.business_id = this.business.id
+            console.log('Adding signup employee', this.employee)
             this.$store.dispatch('addSignupEmployee', this.employee)
             .then(() => this.employee = {
                     name: '',
                     email: '',
                     role: EmployeeRole.employee,
                     handle: '',
+                    location_id: this.primaryLocationIndex,
                 }
             )
         },
@@ -327,6 +395,9 @@ export default {
                 .then(result => {
                     if (result.length === 0) {
                         let region = this.$store.getters.defaultRegion
+                        if (location.primary) {
+                            this.$store.commit('currentUserRegion', region)
+                        }
                         location.region_id = region.id
                         // console.log(`Assigning default region to location with unknown neighborhood ${location.places_neighborhood}`)
                         return location
@@ -361,10 +432,12 @@ export default {
                                 }
                                 return this.$store.dispatch('createRegion', region)
                                 .then(r => {
+                                    this.$store.commit('currentUserRegion', region)
                                     location.region_id = r.id
                                     return location
                                 })
                             } else {
+                                this.$store.commit('currentUserRegion', matchingRegions[0])
                                 location.region_id = matchingRegions[0].id
                                 return location
                             }
@@ -372,6 +445,9 @@ export default {
                     }
                 })
             }
+            let region = this.$store.getters.defaultRegion
+            location.region_id = region.id
+            this.$store.commit('currentUserRegion', region)
             return new Promise((resolve, reject) => resolve(location))
         },
         locationSelected(googlePlacesLocation) {
@@ -387,7 +463,6 @@ export default {
         additionalLocationSelected(googlePlacesLocation) {
             this.addLocation(googlePlacesLocation.place_id, this.$refs.additionalLocation, false)
             .then(location => {
-                console.log('adding additional signup location', location)
                 this.$store.dispatch('addSignupLocation', location)
             })
         }

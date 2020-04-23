@@ -167,5 +167,19 @@ export default {
     },
     deleteSignupEmployee(state, index) {
         state.signup.employees.splice(index, 1)
+    },
+
+    currentUser(state, currentUser) {
+        state.currentUser = currentUser
+    },
+    currentUserLocation(state, location) {
+        state.currentUser.location = location
+    },
+    currentUserRegion(state, region) {
+        console.log('Setting currentUser region to ', region)
+        state.currentUser.region = region
+    },
+    currentUserEmployee(state, employee) {
+        state.currentUser.employee = employee
     }
 }

@@ -29,7 +29,7 @@ export default {
 
     tags: (state) => (type, id) => state.tags.filter(t => t.taggable_type === type && t.taggable_id === id),
     regions: (state) => state.regions,
-    defaultRegion: (state) => state.region.find(r => r.name === "NEW_BUSINESS_REGION"),
+    defaultRegion: (state) => state.regions.find(r => r.name === "NEW_BUSINESS_REGION"),
     regionsNamed: (state) => (name) => state.regions.filter(r => r.name === name),
     region: (state) => (id) => state.regions.find(r => r.id === id),
 
