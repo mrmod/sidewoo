@@ -22,8 +22,21 @@ export default {
         state.businessEmployees.push([data.business, data.employees])
     },
 
-    employee(state, employee) {
-        state.employee = employee
+    currentUserEmployee(state, employee) {
+        state.currentUser.employee = employee
+    },
+    updateEmployees(state, employee) {
+        let index = -1
+        state.employees.forEach((e, idx) => {
+            if (e.id === employee.id) {
+                index = idx
+            }
+        })
+        if (index >= 0 ) {
+            state.employees[index] = employee
+        } else {
+            state.employees.push(employee)
+        }
     },
 
     title(state, title) {

@@ -14,7 +14,7 @@ export default {
     post: null,
     event: null,
     regions: [],
-
+    employees: [],
     signup: {
         business: {},
         locations: [],
@@ -32,6 +32,6 @@ export default {
         session: null,
         employee: {},
         location: {},
-        region: {},
+        region: {id: 1},
     }
 }

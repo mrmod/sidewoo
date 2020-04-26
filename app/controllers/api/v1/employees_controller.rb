@@ -28,7 +28,7 @@ class Api::V1::EmployeesController < ApplicationController
   def update
     @employee = Employee.find params[:id]
     unless @employee.present?
-      render json: null, status: 404
+      render json: nil, status: 404
       return
     end
     if @employee.update valid_params

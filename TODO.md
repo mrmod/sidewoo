@@ -15,7 +15,7 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * Ability to add new locations to an existing business
 * Posts should be sortable by `post.created_at` and latest commented
 * Posts should be the default view [Done]
-* Who commented and when they commented
+* Who commented and when they commented [Done]
 * Maybe make comments more distinct from the rest of the page?
 * Keep the business category information and founding information with the My Business page
 * Neighbors should show the other businesses in the same region
@@ -27,7 +27,7 @@ Things look good so far. Below are the things we talked about and wanted to get 
 
 * **BUG** Toggling a location on and off in the locations step of SignUp throws errors 
 * Ensure employee addresses are unique for employees of a business
-* Set the Region of a registering businesses's first employee to that of the Primary Location during SignUp
+* Set the Region of a registering businesses's first employee to that of the Primary Location during SignUp [Done]
 
 # Features
 
@@ -61,6 +61,12 @@ To put a Post/Event in many regions, one Post/Event per Region is created
 rails g migration AddRegionToPost region:references
 rails g migration AddRegionToEvent region:references
 rails g migration AddLocationToEmployee location:references
+```
+
+#### Comment creation date
+```
+rails g migration AddModifiedAtToComment modified_at:datetime
+sed -i.bak 's/\(add_column.*\)$/\1, default: -> { "CURRENT_TIMESTAMP" }/' db/migrate/*_add_modified_at_to_comment.rb
 ```
 
 ## Feature: Neighborhood creation [Done]

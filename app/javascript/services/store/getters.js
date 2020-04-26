@@ -7,7 +7,7 @@ export default {
         return employees ? employees[1] : []
     },
 
-    employee: (state) => state.employee,
+    employee: (state) => (id) => state.employees.find(e => (e.id === id)),
 
     title: state => state.title,
 

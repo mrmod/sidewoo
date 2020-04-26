@@ -44,7 +44,7 @@ export default {
         
         getEmployee: (context, employeeId) => employeesService.getOneEmployee(employeeId)
             .then(r => {
-                context.commit('employee', r.data)
+                context.commit('updateEmployees', r.data)
                 return r.data
             }),
         createEmployee: (context, employee) => employeesService.createEmployee(employee)
@@ -194,6 +194,13 @@ export default {
             loggedIn: false,
             isAuthenticating: true,
         }),
+        getCurrentUserEmployee: ({dispatch, commit, state}, employeeId) => {
+            return dispatch('getEmployee', employeeId)
+            .then(r => {
+                commit('currentUserEmployee', r.data)
+                return r.data
+            })
+        },
         // Returns nothing of value
         // Sets the current location of the logged in user to that given
         setCurrentUserLocation: ({dispatch, commit, state}, location) => {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_21_160357) do
+ActiveRecord::Schema.define(version: 2020_04_25_230531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2020_04_21_160357) do
     t.bigint "employee_id", null: false
     t.string "commentable_type"
     t.bigint "commentable_id"
+    t.datetime "modified_at", default: -> { "CURRENT_TIMESTAMP" }
     t.index ["employee_id"], name: "index_comments_on_employee_id"
   end
 

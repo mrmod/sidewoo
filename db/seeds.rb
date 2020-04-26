@@ -22,7 +22,7 @@ business = Business.create!(
   phone: Faker::PhoneNumber.phone_number,
   email: Faker::Internet.email,
 )
-(rand * map_data.size).to_i.times do
+((rand * map_data.size) + 1).to_i.times do
   region = Region.create!(
     name: region_names.sample,
     points: map_data[(rand * map_data.size - 1).to_i].to_json,

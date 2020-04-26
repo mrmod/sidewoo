@@ -6,4 +6,7 @@ class Comment < ApplicationRecord
   has_many :media, as: :mediumable
 
   validates :text, presence: true
+
+  # Always update the modified at on saving
+  before_save { self.modified_at = Time.now }
 end

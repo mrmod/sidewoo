@@ -50,7 +50,7 @@ export default {
     created() {
         Promise.all([
             this.$store.dispatch('getBusiness', this.$currentUser.business_id),
-            this.$store.dispatch('getEmployee', this.$currentUser.employee_id),
+            this.$store.dispatch('getCurrentUserEmployee', this.$currentUser.employee_id),
             this.$store.dispatch('getBusinessLocations', this.$currentUser.business_id),
             this.$store.dispatch('getBusinessEmployees', this.$currentUser.business_id),
         ])
@@ -60,7 +60,7 @@ export default {
             return this.$store.getters.business
         },
         employee() {
-            return this.$store.getters.employee
+            return this.$store.state.currentUser.employee
         },
         employees() {
             return this.$store.getters.businessEmployees(this.$currentUser.business_id)
