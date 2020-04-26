@@ -22,7 +22,7 @@ export default {
     },
     components: { AddPost, Post, TagList },
     computed: {
-        newPost: function() {
+        newPost() {
             return {
                 employee_id: this.$currentUser.employee_id,
                 private: false,
@@ -31,6 +31,5 @@ export default {
             }
         }
     },
-    
 }
 </script>

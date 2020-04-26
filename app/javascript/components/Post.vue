@@ -1,34 +1,34 @@
 <template>
-    <md-card md-with-hover v-if='post'>
-        <md-card-header>
-            <router-link tag="span" class="no-decoration" :to='showPost'>
-                <div class="md-title">
-                    {{ post.topic }}
-                </div>
-            </router-link>
-        </md-card-header>
+    <router-link v-if='post' tag="span" class="no-decoration" :to='showPost'>
+        <md-card md-with-hover>
+            <md-card-header>
+                    <div class="md-title">
+                        {{ post.topic }}
+                    </div>
+            </md-card-header>
 
-        <md-card-content>
-            {{ post.text }}
-        </md-card-content>
-        <EditableMedia :media='mediaList' :model_id='post.id' :model_type='"Post"' />
-        <slot />
-        
-        <md-card-actions>
+            <md-card-content>
+                {{ post.text }}
+            </md-card-content>
+            <EditableMedia :media='mediaList' :model_id='post.id' :model_type='"Post"' />
+            <slot />
+            
+            <md-card-actions>
 
-            <md-button :to='showPost' v-if='!isEditable'>
-                Comment <i class="material-icons">chat_bubble_outline</i>{{comments.length}}
-            </md-button>
-            <router-link tag="span" :to='editPost' v-if='isEditable && isEditor'>
-                <md-button class="md-primary">
-                    Edit
+                <md-button :to='showPost' v-if='!isEditable'>
+                    Comment <i class="material-icons">chat_bubble_outline</i>{{comments.length}}
                 </md-button>
-            </router-link>
-            <md-button class='md-accent' @click='deletePost' v-if='isEditable && isEditor'>
-                Delete
-            </md-button>
-        </md-card-actions>
-    </md-card>
+                <router-link tag="span" :to='editPost' v-if='isEditable && isEditor'>
+                    <md-button class="md-primary">
+                        Edit
+                    </md-button>
+                </router-link>
+                <md-button class='md-accent' @click='deletePost' v-if='isEditable && isEditor'>
+                    Delete
+                </md-button>
+            </md-card-actions>
+        </md-card>
+    </router-link>
 </template>
 <script>
 import {getPostComments, deletePost, allMedia} from '../services/posts'
@@ -50,6 +50,9 @@ export default {
         }
     },
     computed: {
+        postClicked: function() {
+            console.log('post clicked')
+        },
         comments: function() {
             return this.$store.getters.postComments(this.post.id)
             // return this.$store.getters.allComments.filter(c => c.commentable_id === this.post.id && c.commentable_type === 'Post')

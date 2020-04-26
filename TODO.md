@@ -12,30 +12,31 @@ Things look good so far. Below are the things we talked about and wanted to get 
 
 * Posts don't need tags right now [Done]
 * Ability to create locations for a business [Done]
-* Ability to add new locations to an existing business
-* Posts should be sortable by `post.created_at` and latest commented
 * Posts should be the default view [Done]
 * Who commented and when they commented [Done]
-* Maybe make comments more distinct from the rest of the page?
+* Capture the center for a Places-derived region [Done]
+* Maybe make comments more distinct from the rest of the page? [Done]
+* Set the Region of a registering businesses's first employee to that of the Primary Location during SignUp [Done]
+* Ability to add new locations to an existing business
+* Posts should be sortable by `post.created_at` and latest commented
 * Keep the business category information and founding information with the My Business page
 * Neighbors should show the other businesses in the same region
 ** Triggered from a click on MyBusiness.Location showing a list of them broken down by category
 * When a region is created, a GoogleBusiness search will find businesses in the region and email them
-* Capture the center for a Places-derived region [Done]
+
 * Estimate the center for a Business-derived region polygon
 * Allow add/remove/modify of business employees after a business is created
 
 * **BUG** Toggling a location on and off in the locations step of SignUp throws errors 
 * Ensure employee addresses are unique for employees of a business
-* Set the Region of a registering businesses's first employee to that of the Primary Location during SignUp [Done]
 
 # Features
 
 * A side bar of post topics on the left for Posts section (crime & safety, marketplace, civic information, etc) [Done]
-* Events calendar
 * Neighborhood creation [Done]
 * Posts should show up for the Region of the logged in Employee by default [Done]
 * A side bar allowing the Neighborhood selection for Posts and Events
+* Events calendar
 
 ## Feature: Check if Business Location in Region
 

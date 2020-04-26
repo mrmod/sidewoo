@@ -1,40 +1,40 @@
 <template>
-  <md-card md-card-hover>
-    <md-card-header>
-      <router-link tag="span" class="no-decoration" :to='showEvent'>
-        <div class="md-title">{{ event.name }}</div>
-      </router-link>
-      <div class="md-subhead">{{ event.theme }}</div>
-    </md-card-header>
+  <router-link v-if='event' tag="span" class="no-decoration" :to='showEvent'>
+    <md-card md-card-hover>
+      <md-card-header>
+          <div class="md-title">{{ event.name }}</div>
+          <div class="md-subhead">{{ event.theme }}</div>
+      </md-card-header>
 
-    <md-card-content>
-      <div id="event-description" class="md-body-1">
-        {{ event.description }}
-      </div>
-      <md-divider></md-divider>
-      <div class="event-times">
-        <div class="md-body-1">The event starts at
-          <span class="md-body-2">{{ startTime }}</span>
-          <span class="md-body-1">and ends at
-            <span class="md-body-2">{{ endTime }}</span>
-          </span>
+      <md-card-content>
+        <div id="event-description" class="md-body-1">
+          {{ event.description }}
         </div>
-      </div>
-      <ul id="event-invitations-list">
-        <li v-for="invitation in event.invitations" :key='invitation.id'>
-            {{invitation.name}} invited
-        </li>
-      </ul>
-      <EditableMedia :media='media' :model_id='event.id' :model_type='"Event"' />
-    </md-card-content>
-    
-    <md-card-actions>
-      <router-link :to='editEvent' tag="span" v-if='isEditable'>
-        <md-button class='md-primary'>Edit</md-button>
-      </router-link>
-      <md-button class='md-accent' @click='deleteEvent' v-if='isEditable'>Delete</md-button>
-    </md-card-actions>
-  </md-card>
+        <md-divider></md-divider>
+        <div class="event-times">
+          <div class="md-body-1">The event starts at
+            <span class="md-body-2">{{ startTime }}</span>
+            <span class="md-body-1">and ends at
+              <span class="md-body-2">{{ endTime }}</span>
+            </span>
+          </div>
+        </div>
+        <ul id="event-invitations-list">
+          <li v-for="invitation in event.invitations" :key='invitation.id'>
+              {{invitation.name}} invited
+          </li>
+        </ul>
+        <EditableMedia :media='media' :model_id='event.id' :model_type='"Event"' />
+      </md-card-content>
+      
+      <md-card-actions>
+        <router-link :to='editEvent' tag="span" v-if='isEditable'>
+          <md-button class='md-primary'>Edit</md-button>
+        </router-link>
+        <md-button class='md-accent' @click='deleteEvent' v-if='isEditable'>Delete</md-button>
+      </md-card-actions>
+    </md-card>
+  </router-link>
 </template>
 <script>
 import {deleteEvent, updateEvent, allMedia} from '../services/events'
