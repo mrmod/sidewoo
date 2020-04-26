@@ -45,15 +45,17 @@ export default {
     data() {
         return {
             regionsLoaded: [], // Location Ids
+            isLoaded: false,
         }
     },
     created() {
         Promise.all([
-            this.$store.dispatch('getBusiness', this.$currentUser.business_id),
-            this.$store.dispatch('getCurrentUserEmployee', this.$currentUser.employee_id),
-            this.$store.dispatch('getBusinessLocations', this.$currentUser.business_id),
-            this.$store.dispatch('getBusinessEmployees', this.$currentUser.business_id),
+            this.$store.dispatch('getBusiness', this.$store.state.currentUser.business_id),
+            this.$store.dispatch('getCurrentUserEmployee', this.$store.state.currentUser.employee_id),
+            this.$store.dispatch('getBusinessLocations', this.$store.state.currentUser.business_id),
+            this.$store.dispatch('getBusinessEmployees', this.$store.state.currentUser.business_id),
         ])
+        .then(() => this.isLoaded = true)
     },
     computed: {
         business() {
@@ -63,7 +65,7 @@ export default {
             return this.$store.state.currentUser.employee
         },
         employees() {
-            return this.$store.getters.businessEmployees(this.$currentUser.business_id)
+            return this.$store.getters.businessEmployees(this.$store.state.currentUser.business_id)
         },
         locations() {
             let locations = this.$store.getters.businessLocations

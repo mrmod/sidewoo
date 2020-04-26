@@ -42,7 +42,7 @@ export default {
         getBusinessEmployees: (context, id) => businessesService.getEmployees(id)
             .then(r => context.commit('businessEmployees', {business: parseInt(id), employees: r.data})),
         
-        getEmployee: (context, employeeId) => employeesService.getOneEmployee(employeeId)
+        getEmployee: (context, id) => employeesService.getOneEmployee(id)
             .then(r => {
                 context.commit('updateEmployees', r.data)
                 return r.data
@@ -194,11 +194,11 @@ export default {
             loggedIn: false,
             isAuthenticating: true,
         }),
-        getCurrentUserEmployee: ({dispatch, commit, state}, employeeId) => {
-            return dispatch('getEmployee', employeeId)
-            .then(r => {
-                commit('currentUserEmployee', r.data)
-                return r.data
+        getCurrentUserEmployee: ({dispatch, commit, state}, id) => {
+            return dispatch('getEmployee', id)
+            .then(employee => {
+                commit('currentUserEmployee', employee)
+                return employee
             })
         },
         // Returns nothing of value

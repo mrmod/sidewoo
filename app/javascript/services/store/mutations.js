@@ -22,9 +22,6 @@ export default {
         state.businessEmployees.push([data.business, data.employees])
     },
 
-    currentUserEmployee(state, employee) {
-        state.currentUser.employee = employee
-    },
     updateEmployees(state, employee) {
         let index = -1
         state.employees.forEach((e, idx) => {
@@ -165,7 +162,6 @@ export default {
     },
 
 
-
     setSignupBusiness(state, business) {
         state.signup.business = business
     },
@@ -189,7 +185,6 @@ export default {
         state.currentUser.location = location
     },
     currentUserRegion(state, region) {
-        console.log('Setting currentUser region to ', region)
         state.currentUser.region = region
     },
     currentUserEmployee(state, employee) {
