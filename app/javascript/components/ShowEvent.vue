@@ -1,6 +1,7 @@
 <template>
   <div id="show-event">
       <Event v-if='isLoaded' :event='event' />
+      <br/>
       <CommentList v-if='isLoaded' :comments='comments' :model_type='"Event"' :model_id='event.id' />
   </div>
 </template>

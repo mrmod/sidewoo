@@ -5,7 +5,7 @@
       :media='media'>
         <TagList :tags='tags' v-on:deleteTag='deleteTag' />
     </Post>
-
+    <br/>
     <CommentList 
       v-if='isLoaded'
       :comments='comments'
