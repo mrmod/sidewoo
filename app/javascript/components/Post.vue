@@ -5,6 +5,9 @@
                     <div class="md-title">
                         {{ post.topic }}
                     </div>
+                    <div class="md-subhead">
+                        {{ subhead }}
+                    </div>
             </md-card-header>
 
             <md-card-content>
@@ -33,6 +36,8 @@
 <script>
 import {getPostComments, deletePost, allMedia} from '../services/posts'
 import EditableMedia from './EditableMedia.vue'
+import {sinceDate} from '../services/dates'
+
 export default {
     name: 'Post',
     components: {EditableMedia},
@@ -50,31 +55,34 @@ export default {
         }
     },
     computed: {
-        postClicked: function() {
-            console.log('post clicked')
+        subhead() {
+            if (this.post.created_at === this.post.updated_at) {
+                return `Posted ${sinceDate(this.post.created_at)}`
+            }
+            return `Updated ${sinceDate(this.post.updated_at)}`
         },
-        comments: function() {
+        comments() {
             return this.$store.getters.postComments(this.post.id)
             // return this.$store.getters.allComments.filter(c => c.commentable_id === this.post.id && c.commentable_type === 'Post')
         },
-        commentsCount: function() {
+        commentsCount() {
             return this.$store.getters.postComments(this.post.id).length
         },
-        tags: function() {
+        tags() {
             return this.$store.getters.postTags(this.post.id)
         },
-        media: function() {
+        media() {
             return this.$store.getters.postMedia(this.post.id)
         },
-        mediaList: function() {
+        mediaList() {
             return this.$store.getters.postMedia(this.post.id)
         },
-        showPost: function() {
+        showPost() {
             if (this.post) {
                 return {name: 'ShowPost', params: {id: this.post.id, title: this.post.topic}}
             }
         },
-        editPost: function() {
+        editPost() {
             if (this.post) {
                 let editPostLink =  {name: 'EditPost', params: {id: this.post.id, title: this.post.topic}}
                 return editPostLink
@@ -82,7 +90,7 @@ export default {
                 console.error(`Can't generate a post link for ${this.post}`)
             }
         },
-        isEditor: function() {
+        isEditor() {
             return this.$currentUser.employee_id === this.post.employee_id
         }
     },

@@ -3,7 +3,8 @@
     <md-card md-card-hover>
       <md-card-header>
           <div class="md-title">{{ event.name }}</div>
-          <div class="md-subhead">{{ event.theme }}</div>
+          <div class="md-subtitle">{{ event.theme }}</div>
+          <div class="md-subhead">{{subhead}}</div>
       </md-card-header>
 
       <md-card-content>
@@ -38,14 +39,21 @@
 </template>
 <script>
 import {deleteEvent, updateEvent, allMedia} from '../services/events'
-import {parseDate} from '../services/dates'
+import {parseDate, sinceDate} from '../services/dates'
 import EditableMedia from './EditableMedia.vue'
 import {resourceId} from '../services/routing'
+
 export default {
     name: 'Event',
     components: {EditableMedia},
     props: {event: Object},
     computed: {
+      subhead() {
+        if (this.event.created_at === this.event.updated_at) {
+          return `Created ${sinceDate(this.event.created_at)}`
+        }
+        return `Updated ${sinceDate(this.event.updated_at)}`
+      },
       showEvent() {
           return {name: 'ShowEvent', params: {id: this.event.id, title: this.event.name}}
       },

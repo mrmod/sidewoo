@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_25_230531) do
+ActiveRecord::Schema.define(version: 2020_04_26_162604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
   create_table "business_group_members", force: :cascade do |t|
     t.bigint "business_group_id", null: false
     t.bigint "business_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["business_group_id"], name: "index_business_group_members_on_business_group_id"
     t.index ["business_id"], name: "index_business_group_members_on_business_id"
   end
@@ -26,6 +28,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.string "name"
     t.text "description"
     t.boolean "private", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "businesses", force: :cascade do |t|
@@ -37,6 +41,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.string "type"
     t.boolean "employee_business"
     t.string "handle"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "comments", force: :cascade do |t|
@@ -46,6 +52,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.string "commentable_type"
     t.bigint "commentable_id"
     t.datetime "modified_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["employee_id"], name: "index_comments_on_employee_id"
   end
 
@@ -56,6 +64,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.string "handle"
     t.string "email"
     t.bigint "location_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["business_id"], name: "index_employees_on_business_id"
     t.index ["location_id"], name: "index_employees_on_location_id"
   end
@@ -66,6 +76,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.bigint "guest_business_id"
     t.bigint "event_id", null: false
     t.string "redemption_code"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["event_id"], name: "index_event_invitations_on_event_id"
   end
 
@@ -91,6 +103,9 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.bigint "parent_id"
     t.bigint "business_id", null: false
     t.bigint "region_id", null: false
+    t.datetime "last_commented", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["business_id"], name: "index_events_on_business_id"
     t.index ["region_id"], name: "index_events_on_region_id"
   end
@@ -111,6 +126,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.boolean "primary", default: false
     t.string "places_id"
     t.string "places_neighborhood"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["region_id"], name: "index_locations_on_region_id"
   end
 
@@ -121,12 +138,16 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.bigint "mediumable_id"
     t.string "mediumable_type"
     t.string "content_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "post_members", force: :cascade do |t|
     t.bigint "post_id", null: false
     t.bigint "employee_id", null: false
     t.integer "role", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["employee_id"], name: "index_post_members_on_employee_id"
     t.index ["post_id"], name: "index_post_members_on_post_id"
   end
@@ -137,6 +158,9 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.boolean "private", default: false
     t.bigint "employee_id", null: false
     t.bigint "region_id", null: false
+    t.datetime "last_commented", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["employee_id"], name: "index_posts_on_employee_id"
     t.index ["region_id"], name: "index_posts_on_region_id"
   end
@@ -155,6 +179,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.text "url"
     t.string "handle"
     t.bigint "business_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["business_id"], name: "index_socials_on_business_id"
   end
 
@@ -164,6 +190,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_230531) do
     t.text "url"
     t.bigint "taggable_id"
     t.string "taggable_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   add_foreign_key "business_group_members", "business_groups"

@@ -18,7 +18,7 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * Maybe make comments more distinct from the rest of the page? [Done]
 * Set the Region of a registering businesses's first employee to that of the Primary Location during SignUp [Done]
 * Ability to add new locations to an existing business
-* Posts should be sortable by `post.created_at` and latest commented
+* Posts should be sortable by `post.created_at` and latest commented [Done]
 * Keep the business category information and founding information with the My Business page
 * Neighbors should show the other businesses in the same region
 ** Triggered from a click on MyBusiness.Location showing a list of them broken down by category
@@ -44,6 +44,18 @@ When a Business joins and gives their address, a check should be done to see if 
 
 ### Migrations
 
+#### Most recent commented data
+
+```
+rails g migration AddLastCommentedToPost last_commented:datetime
+sed -i  's/\(add_column.*\)$/\1, default: -> { "CURRENT_TIMESTAMP" }/' db/migrate/*_add_last_commented_to_post.rb
+rails g migration AddLastCommentedToEvent last_commented:datetime
+sed -i  's/\(add_column.*\)$/\1, default: -> { "CURRENT_TIMESTAMP" }/' db/migrate/*_add_last_commented_to_event.rb
+
+rails g migration AddTimestampsEverywhere
+```
+
+#### Store Google places information
 ```
 rails g migration AddGooglePlacesToLocation places_id:string places_neighborhood:string
 rails g migration AddEmailToEmployee email:string
