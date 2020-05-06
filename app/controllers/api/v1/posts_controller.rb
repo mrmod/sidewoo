@@ -38,6 +38,7 @@ class Api::V1::PostsController < ApplicationController
         :private,
         :topic,
         :text,
+        :region_id,
       )
     end
 end

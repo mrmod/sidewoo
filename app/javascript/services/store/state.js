@@ -15,6 +15,7 @@ export default {
     event: null,
     regions: [],
     employees: [],
+    regionalBusinesses: [],
     signup: {
         business: {},
         locations: [],

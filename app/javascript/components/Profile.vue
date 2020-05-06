@@ -9,7 +9,7 @@
       </div>
       <div id="locations">
           <div class="md-display-1">Locations</div>
-        <md-list>
+        <md-list v-if='isLoaded'>
             <md-list-item v-for='location in locations' :key='`location.${location.id}`'>
                 <div class="md-list-item-text">
                     <span>{{location.name}}</span>
@@ -23,7 +23,7 @@
       </div>
       <div id="employees">
           <div class="md-display-1">Employees</div>
-          <md-list>
+          <md-list v-if='isLoaded'>
             <md-list-item v-for='e in employees' :key='`employee.${e.id}`'>
                 <div class="md-list-item-text">
                     <span v-if="e.id === employee.id">
@@ -34,6 +34,18 @@
                 </div>
             </md-list-item>
         </md-list>
+      </div>
+
+      <div id="neighbors">
+          <div class="md-display-1">Neighbors</div>
+          <md-list v-if='isLoaded'>
+              <md-list-item v-for='b in regionalBusinesses' :key='`regionalBusiness.${b.id}`'>
+                  <div v-if='b.id !== business.id' class="md-list-item-text">
+                      <span>{{b.name}}</span>
+                      <span>{{b.address}}</span>
+                  </div>
+              </md-list-item>
+          </md-list>
       </div>
   </div>
 </template>
@@ -54,6 +66,7 @@ export default {
             this.$store.dispatch('getCurrentUserEmployee', this.$store.state.currentUser.employee_id),
             this.$store.dispatch('getBusinessLocations', this.$store.state.currentUser.business_id),
             this.$store.dispatch('getBusinessEmployees', this.$store.state.currentUser.business_id),
+            this.$store.dispatch('getRegionalBusinesses', this.$store.state.currentUser.region.id),
         ])
         .then(() => this.isLoaded = true)
     },
@@ -66,6 +79,9 @@ export default {
         },
         employees() {
             return this.$store.getters.businessEmployees(this.$store.state.currentUser.business_id)
+        },
+        regionalBusinesses() {
+            return this.$store.state.regionalBusinesses
         },
         locations() {
             let locations = this.$store.getters.businessLocations

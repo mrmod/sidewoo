@@ -161,6 +161,9 @@ export default {
         }
     },
 
+    regionalBusinesses(state, businesses) {
+        state.regionalBusinesses = businesses
+    },
 
     setSignupBusiness(state, business) {
         state.signup.business = business

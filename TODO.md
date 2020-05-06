@@ -17,15 +17,17 @@ Things look good so far. Below are the things we talked about and wanted to get 
 * Capture the center for a Places-derived region [Done]
 * Maybe make comments more distinct from the rest of the page? [Done]
 * Set the Region of a registering businesses's first employee to that of the Primary Location during SignUp [Done]
-* Ability to add new locations to an existing business
 * Posts should be sortable by `post.created_at` and latest commented [Done]
-* Keep the business category information and founding information with the My Business page
-* Neighbors should show the other businesses in the same region
+* Neighbors should show the other businesses in the same region [Done]
 ** Triggered from a click on MyBusiness.Location showing a list of them broken down by category
-* When a region is created, a GoogleBusiness search will find businesses in the region and email them
-
+* Keep the business category information and founding information with the My Business page
+* Ability to add new locations to an existing business
 * Estimate the center for a Business-derived region polygon
 * Allow add/remove/modify of business employees after a business is created
+
+## Marketing
+
+* When a region is created, a GoogleBusiness search will find businesses in the region and email them
 
 * **BUG** Toggling a location on and off in the locations step of SignUp throws errors 
 * Ensure employee addresses are unique for employees of a business

@@ -1,7 +1,15 @@
 class Medium < ApplicationRecord
     belongs_to :mediumable, polymorphic: true
+    def self.s3
+        if Rails.env.production?
+            Aws::S3::Client.new
+        else
+            Rails.configuration.s3
+        end
+    end
+
     def self.s3_create(uploaded_file)
-        s3 = Rails.configuration.s3
+        s3 = Medium.s3
         bucket = Rails.configuration.media_bucket
         key = "#{uploaded_file.original_filename}__#{DateTime.now.to_i}"
 

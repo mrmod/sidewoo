@@ -23,7 +23,7 @@ class Api::V1::RegionsController < ApplicationController
     end
 
     def show
-        @region = Region.find_by_id params[:id]
+        @region = Region.find params[:id]
         if @region.present?
             render json: @region
         else
@@ -33,7 +33,7 @@ class Api::V1::RegionsController < ApplicationController
 
     # GET /regions/:region_id/posts
     def show_posts
-        @region = Region.find_by_id params[:region_id]
+        @region = Region.find params[:region_id]
         if @region.present?
             render json: @region.posts
         else
@@ -43,12 +43,18 @@ class Api::V1::RegionsController < ApplicationController
 
     # GET /regions/:region_id/events
     def show_events
-        @region = Region.find_by_id params[:region_id]
+        @region = Region.find params[:region_id]
         if @region.present?
             render json: @region.events
         else
             render json: nil, status: 404
         end
+    end
+
+    # GET /regions/:region_id/businesses
+    def show_businesses
+        @businesses = Location.regional_businesses params[:region_id]
+        render json: @businesses
     end
 
     private

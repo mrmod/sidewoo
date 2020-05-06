@@ -58,6 +58,7 @@ class Api::V1::EventsController < ApplicationController
         :end_time,
         :parent_id,
         :business_id,
+        :region_id,
       )
     end
 end

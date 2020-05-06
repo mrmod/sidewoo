@@ -318,6 +318,7 @@ export default {
             }
             placesDetail(this.selectedLocation.place_id, this.$refs.placesDetail)
             .then(details => {
+                console.dir(details)
                 return this.locationFromAddressComponents(details, true)
                 .then(location => {
                     this.location = location
@@ -335,7 +336,7 @@ export default {
         addEmployee() {
             this.employee.role = parseInt(this.employee.role)
             this.employee.business_id = this.business.id
-            console.log('Adding signup employee', this.employee)
+            
             this.$store.dispatch('addSignupEmployee', this.employee)
             .then(() => this.employee = {
                     name: '',

@@ -162,6 +162,11 @@ export default {
               context.commit('updateRegions', r.data)
               return r.data
           }),
+        getRegionalBusinesses: (context, regionId) => regionsService.getRegionalBusinesses(regionId)
+          .then(r => {
+              context.commit('regionalBusinesses', r.data)
+              return r.data
+          }),
         updateLocation: (context, location) => locationsService.updateLocation(location)
           .then(r => context.commit('updateBusinessLocations', r.data)),
         getLocationRegion: (context, locationId) => locationsService.getRegion(locationId)

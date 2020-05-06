@@ -61,6 +61,7 @@ export default {
         text: this.text,
         employee_id: this.employee_id,
         private: this.private,
+        region_id: this.$store.state.currentUser.region.id
       }
       this.$store.dispatch('savePost', post)
       this.$emit('savePost')

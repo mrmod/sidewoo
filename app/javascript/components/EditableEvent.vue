@@ -115,6 +115,7 @@ export default {
                 start_time: this.start_time,
                 end_time: this.end_time,
                 business_id: this.business_id,
+                region_id: this.$store.state.currentUser.region.id,
             }
             if (this.id) {
                 event.id = this.id

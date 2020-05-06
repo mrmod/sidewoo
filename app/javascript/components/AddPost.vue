@@ -10,7 +10,6 @@
   </div>
 </template>
 <script>
-import {createPost} from '../services/posts'
 import EditablePost from './EditablePost.vue'
 export default {
     name: 'AddPost',

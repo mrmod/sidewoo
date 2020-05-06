@@ -4,6 +4,7 @@ import {authorizedJSONHeaders, railsErrorHandler} from './requests'
 const allRegionsUrl = '/api/regions'
 const regionPostsUrl = id => `${allRegionsUrl}/${id}/posts`
 const regionEventsUrl = id => `${allRegionsUrl}/${id}/events`
+const regionBusinessesUrl = id => `${allRegionsUrl}/${id}/businesses`
 const defaultRegionUrl = `${allRegionsUrl}?default=true`
 
 export const getAllRegions = () => axios.get(allRegionsUrl, authorizedJSONHeaders)
@@ -38,6 +39,16 @@ export const getEvents = id => axios.get(regionEventsUrl(id), authorizedJSONHead
     .catch(railsErrorHandler)
 
 export const getDefault = () => axios.get(defaultRegionUrl, authorizedJSONHeaders)
+    .then(r => r.data)
+    .then(data => ({
+        data: data,
+        error: null,
+    }))
+    .catch(railsErrorHandler)
+
+export const getRegionalBusinesses = (regionId) => axios.get(
+        regionBusinessesUrl(regionId), authorizedJSONHeaders
+    )
     .then(r => r.data)
     .then(data => ({
         data: data,

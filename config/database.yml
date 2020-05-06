@@ -28,5 +28,11 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: sidewoo_prod
+  pool: 5
+  username: sidewoo
+  password: sidewoo
+  host: 127.0.0.1
+  post: 5432
