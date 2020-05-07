@@ -2,12 +2,15 @@
   <div id="editable-event">
     <Errors :errors='errors' />
     <md-field>
+        <label>Event name</label>
         <md-input v-model='name' placeholder='Event name'></md-input>
     </md-field>
     <md-field>
+        <label>Type of event</label>
         <md-input v-model='theme' placeholder='A casual themed event'></md-input>
     </md-field>
     <md-field>
+        <label>Description of the event</label>
         <md-textarea v-model='description' placeholder='Describe the event'>
         </md-textarea>
     </md-field>
@@ -17,18 +20,19 @@
       :model_id='id'
       :model_type='"Event"'
       v-on:addMedia='addMedia'
-      />
-    <DatetimePicker
-    :id='"start_time"'
-    :label='"Start time"'
-    :format='"YYYY-MM-DD h:mm a"'
-    v-model='start_time'
     />
     <DatetimePicker
-    :id='"end_time"'
-    :label='"End time"'
-    :format='"YYYY-MM-DD h:mm a"'
-    v-model='end_time'
+        :id='"start_time"'
+        :label='"Start time"'
+        :format='"YYYY-MM-DD h:mm a"'
+        v-model='start_time'
+        v-on:input='startTimeChanged'
+    />
+    <DatetimePicker
+        :id='"end_time"'
+        :label='"End time"'
+        :format='"YYYY-MM-DD h:mm a"'
+        v-model='end_time'
     />
     <PendingInvitations
       :pendingInvitations="invitations"
@@ -95,6 +99,11 @@ export default {
         this.allBusinesses()
     },
     methods: {
+        startTimeChanged: function(v) {
+            if (!this.end_time) {
+                this.end_time = this.start_time
+            }
+        },
         // TODO: API must only provide relevant businesses for this event. Eg, in group, regional, etc
         allBusinesses: function() {
             return allBusinesses()
