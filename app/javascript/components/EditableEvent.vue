@@ -7,7 +7,14 @@
     </md-field>
     <md-field>
         <label>Type of event</label>
-        <md-input v-model='theme' placeholder='A casual themed event'></md-input>
+        <md-select
+            placeholder='A casual themed event'
+            v-on:md-selected='themeSelected'
+            >
+            <md-option v-for='(lbl, i) in themes' :key='`theme.${i}`' :value='i'>
+                {{lbl.display}}
+            </md-option>
+        </md-select>
     </md-field>
     <md-field>
         <label>Description of the event</label>
@@ -53,6 +60,7 @@
 </template>
 <script>
 import {createEvent, addMedia} from '../services/events'
+import {themes} from '../services/decorators'
 import {allBusinesses} from '../services/businesses'
 import Errors from './Errors.vue'
 import EditableMedia from './EditableMedia.vue'
@@ -68,6 +76,7 @@ export default {
     data: function() {
         if (this.event) {
             return {
+                themes: themes,
                 businesses: [],
                 invitations: this.event.invitations,
                 id: this.event.id,
@@ -83,6 +92,7 @@ export default {
             }
         }
         return {
+            themes: themes,
             businesses: [],
             invitations: [],
             name: '',
@@ -103,6 +113,9 @@ export default {
             if (!this.end_time) {
                 this.end_time = this.start_time
             }
+        },
+        themeSelected(v) {
+            this.theme = this.themes[v].name
         },
         // TODO: API must only provide relevant businesses for this event. Eg, in group, regional, etc
         allBusinesses: function() {

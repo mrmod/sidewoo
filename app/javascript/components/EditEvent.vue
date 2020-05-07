@@ -5,7 +5,15 @@
             <md-input v-model='event.name' placeholder='Event name'></md-input>
         </md-field>
         <md-field>
-            <md-input v-model='event.theme' placeholder='A casual themed event'></md-input>
+            <label>Type of event</label>
+            <md-select
+                placeholder='A casual themed event'
+                v-on:md-selected='themeSelected'
+                >
+                <md-option v-for='(lbl, i) in themes' :key='`theme.${i}`' :value='i'>
+                    {{lbl.display}}
+                </md-option>
+            </md-select>
         </md-field>
         <md-field>
             <md-textarea v-model='event.description' placeholder='Describe the event'>
@@ -41,6 +49,7 @@
 import Errors from './Errors.vue'
 import EditableMedia from './EditableMedia.vue'
 import {resourceId} from '../services/routing'
+import {themes} from '../services/decorators'
 export default {
     name: 'EditEvent',
     components: {Errors, EditableMedia},
@@ -54,6 +63,9 @@ export default {
         media() {
             return this.$store.getters.eventMedia(resourceId(this.$route))
         },
+        themes() {
+            return themes
+        },
         cancelEditing() {
             let id = resourceId(this.$route)
             if (id !== null) {
@@ -64,6 +76,11 @@ export default {
         },
     },
     methods: {
+        themeSelected(v) {
+            if (this.themes[v]) {
+                this.event.theme = this.themes[v].name
+            }
+        },
         saveEvent() {
             this.$store.dispatch('saveEvent', this.event)
                 .then(() => this.$router.replace(`/events/${this.event.id}`))

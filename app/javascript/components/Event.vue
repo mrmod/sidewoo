@@ -3,7 +3,7 @@
     <md-card md-card-hover>
       <md-card-header>
           <div class="md-title">{{ event.name }}</div>
-          <div class="md-subtitle">{{ event.theme }}</div>
+          <div class="md-subtitle">{{ theme }}</div>
           <div class="md-subhead">{{subhead}}</div>
       </md-card-header>
 
@@ -42,6 +42,7 @@ import {deleteEvent, updateEvent, allMedia} from '../services/events'
 import {parseDate, sinceDate} from '../services/dates'
 import EditableMedia from './EditableMedia.vue'
 import {resourceId} from '../services/routing'
+import {themes} from '../services/decorators'
 
 export default {
     name: 'Event',
@@ -74,6 +75,13 @@ export default {
       endTime() {
         let date = parseDate(this.event.end_time)
         return date.toLocaleString()
+      },
+      theme() {
+        let theme = themes.find(t => t.name === this.event.theme)
+        if (theme) {
+          return theme.display
+        }
+        return this.event.theme
       }
     },
     methods: {
