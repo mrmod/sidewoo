@@ -49,12 +49,14 @@ export default {
             }),
         createEmployee: (context, employee) => employeesService.createEmployee(employee)
             .then(r => {
-                context.commit('employee', r.data)
+                // TODO: Commit employee to the current store
+                context.commit('updateEmployees', r.data)
                 return r.data
             }),
         saveEmployee: (context, employee) => employeesService.saveEmployee(employee)
             .then(r => {
-                context.commit('employee', r.data)
+                // TODO: Commit employee to the current store
+                context.commit('updateEmployees', r.data)
                 return r.data
             }),
 // POSTS

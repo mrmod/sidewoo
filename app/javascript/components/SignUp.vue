@@ -1,7 +1,7 @@
 <template>
   <div id="signup">
       <md-steppers :md-active-step.sync="activeStep" :md-linear='true' >
-
+<!-- Step 1 : Add the name and primary address to the business-->
           <md-step id="newBusiness" :md-label='steps.newBusiness.label' :md-done.sync='steps.newBusiness.isDone'>
               Define the address, name, website URL, link a Google business
               Display the owner employee, the one who "Signed Up" with Google or whatever here
@@ -9,7 +9,7 @@
                   <label>Name</label>
                   <md-input v-model='business.name' />
               </md-field>
-              <LocationSelector v-on:locationSelected='locationSelected' />
+              <LocationAutocomplete v-on:locationSelected='locationSelected' />
               <div ref="placesDetail"></div>
               <div>
                 <md-button
@@ -20,9 +20,9 @@
                 </md-button>
               </div>
           </md-step>
-
+<!-- Step 2 : Add locations-->
           <md-step id="setupLocations" :md-label='steps.setupLocations.label' :md-done.sync='steps.setupLocations.isDone'>
-
+              Add other locations your business has
               <md-list>
                   <md-list-item v-for='l in locations' :key='l.places_id'>
                       <md-icon v-if='l.primary' class="md-primary">star</md-icon>
@@ -33,7 +33,7 @@
                       </div>
                   </md-list-item>
               </md-list>
-              <LocationSelector v-on:locationSelected='additionalLocationSelected' />
+              <LocationAutocomplete v-on:locationSelected='additionalLocationSelected' />
               <div ref="additionalLocation"></div>
               <div ref="neighborhood"></div>
               <div>
@@ -41,7 +41,7 @@
                 <md-button class="md-raised" @click='previousStep'>Go back</md-button>
               </div>
           </md-step>
-
+<!-- Step 3 : Setup additional employees-->
           <md-step id="setupEmployees" :md-label='steps.setupEmployees.label' :md-done.sync='steps.setupEmployees.isDone'>
               Display the owner employee as un-editable.
               Allow adding as many employees as the company needs.
@@ -57,8 +57,12 @@
                   </md-list-item>
               </md-list>
               <md-field>
-                  <label>Name</label>
-                  <md-input v-model='employee.name' required></md-input>
+                  <label>First name</label>
+                  <md-input v-model='employee.firstName' required></md-input>
+              </md-field>
+              <md-field>
+                  <label>Last name</label>
+                  <md-input v-model='employee.lastName' required></md-input>
               </md-field>
               <md-field>
                   <label>Email</label>
@@ -81,11 +85,11 @@
               <md-button class="md-raised" @click='addEmployee'>Add Another Employee</md-button>
               <md-divider />
               <div>
-                <md-button class="md-raised md-primary" @click='nextStep'>Next: Review</md-button>
+                <md-button class="md-raised md-primary" @click='endSetupEmployeesStep'>Next: Review</md-button>
                 <md-button class="md-raised" @click='previousStep'>Go back</md-button>
               </div>
           </md-step>
-
+<!-- Step 4 : List all information -->
           <md-step id="done" :md-label="steps.done.label" :md-done-sync='allDone'>
               <span class="md-display-2">Locations</span>
               <md-list>
@@ -121,12 +125,12 @@
 </template>
 <script>
 import {EmployeeRole} from '../services/types'
-import LocationSelector from './LocationSelector.vue'
+import LocationAutocomplete from './LocationAutocomplete.vue'
 import placesDetail from '../services/placesDetail'
 import neighborhoodSearch from '../services/neighborhoodSearch'
 export default {
     name: 'SignUp',
-    components: {LocationSelector},
+    components: {LocationAutocomplete},
     data() {
         return {
             activeStep: "newBusiness",
@@ -144,7 +148,8 @@ export default {
                 postal: '', lat: '', long: '', primary: false,
             },
             employee: {
-                name: '',
+                firstName: '',
+                lastName: '',
                 role: EmployeeRole.employee,
                 handle: '',
                 email: '',
@@ -240,7 +245,6 @@ export default {
 
             let locationPromises = this.locations.map((location, idx) => {
 
-                console.log('Creating location promise using', location)
                 return this.$store.dispatch(
                     'createBusinessLocation', {
                         business: business,
@@ -254,7 +258,6 @@ export default {
             // TODO: Update the logged in employee's location to the 
             //       primary location of the business
 
-            console.log('Updating business', business)
             // Create a new business
             return this.$store.dispatch('saveBusiness', business)
             .then(b => this.business = b)
@@ -272,6 +275,8 @@ export default {
                             business_id: this.business.id,
                             location_id: matchedLocation.location.id,
                         })
+                        delete employee.firstName
+                        delete employee.lastName
                         console.log('Adding creatable employee', employee)
                         creatableEmployees.push(employee)
                     } else {
@@ -292,6 +297,8 @@ export default {
                 }
                 return Promise.all(employeePromises)
             })
+            // TODO: Create a mutation
+            .then(() => (this.$store.createEmployees = []))
             .then(() => this.$router.push('/me'))
             .catch(err => {
                 console.error(err)
@@ -301,6 +308,7 @@ export default {
         allDone() {
             return true
         },
+        // returns true if it's OK to proceed to the next step
         stepComplete(step) {
             switch (step) {
                 case 'newBusiness':
@@ -329,6 +337,19 @@ export default {
                 })
             }).then(() => this.nextStep())
         },
+        isValidEmployee() {
+            console.log('isValid?', this.employee)
+            return (this.employee.firstName.length > 2 &&
+            this.employee.lastName.length > 2 &&
+            this.employee.email.length > 8)
+        },
+        endSetupEmployeesStep() {
+            console.log('thisEmployee', this.employee)
+            if (this.isValidEmployee()) {
+                this.addEmployee()
+            }
+            this.nextStep()
+        },
         addLocation(placesId, ref, primary) {
             return placesDetail(placesId, ref)
             .then(details => this.locationFromAddressComponents(details, primary))
@@ -336,10 +357,17 @@ export default {
         addEmployee() {
             this.employee.role = parseInt(this.employee.role)
             this.employee.business_id = this.business.id
+            this.employee.name = `${this.employee.firstName} ${this.employee.lastName}`
+            if (this.employee.location_id === 0) {
+                this.employee.location_id = this.primaryLocationIndex
+            }
+            delete this.employee.firstName
+            delete this.employee.lastName
             
             this.$store.dispatch('addSignupEmployee', this.employee)
             .then(() => this.employee = {
-                    name: '',
+                    firstName: '',
+                    lastName: '',
                     email: '',
                     role: EmployeeRole.employee,
                     handle: '',
@@ -461,8 +489,8 @@ export default {
                 this.business.name = googlePlacesLocation.name
             }
         },
-        additionalLocationSelected(googlePlacesLocation) {
-            this.addLocation(googlePlacesLocation.place_id, this.$refs.additionalLocation, false)
+        additionalLocationSelected(place) {
+            this.addLocation(place.place_id, this.$refs.additionalLocation, false)
             .then(location => {
                 this.$store.dispatch('addSignupLocation', location)
             })

@@ -4,11 +4,13 @@
     </div>
     <md-field>
         <label>Business Name and City</label>
-        <md-input @keypress='addressSearch' v-model='address' />
+        <md-input @keypress='handleKeypress' v-model='address' />
     </md-field>
+    <md-button class="md-raised" @click='addressSearch'>Verify address</md-button>
   </div>
 </template>
 <script>
+
 import initGoogle from '../services/google'
 export default {
     name: 'LocationFinder',
@@ -24,12 +26,14 @@ export default {
         })
     },
     methods: {
-        addressSearch(e) {
+        handleKeypress(e) {
             if (e.key !== 'Enter') {
                 return
             }
             e.preventDefault()
-
+            this.addressSearch()
+        },
+        addressSearch() {
             if (this.address.length > 3 && this.address.indexOf(' ') > 0) {
                 // https://developers.google.com/maps/documentation/javascript/reference/places-service#FindPlaceFromQueryRequest
                 // Uses the Basic Data SKU https://developers.google.com/maps/billing/gmp-billing#basic-data

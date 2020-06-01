@@ -26,8 +26,8 @@ export default {
     components: {EventList},
     data() {
         return {
-            comparator: this.orderByCreated,
-            comparatorName: 'orderByCreated',
+            comparator: this.orderByStartTime,
+            comparatorName: 'orderByStartTime',
         }
     },
     computed: {

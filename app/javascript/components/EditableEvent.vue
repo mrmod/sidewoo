@@ -34,6 +34,7 @@
         :format='"YYYY-MM-DD h:mm a"'
         v-model='start_time'
         v-on:input='startTimeChanged'
+        v-on:validate='unbindStartTime'
     />
     <DatetimePicker
         :id='"end_time"'
@@ -89,6 +90,7 @@ export default {
                 business_id: this.event.business_id,
                 parent_id: this.event.parent_id,
                 errors: null,
+                bindStartToEnd: true, // When true, setting start time sets the end time
             }
         }
         return {
@@ -103,6 +105,7 @@ export default {
             business_id: this.$currentUser.business_id,
             showAddEvent: false,
             errors: null,
+            bindStartToEnd: true, // When true, setting start time sets the end time
         }
     },
     created: function() {
@@ -110,9 +113,12 @@ export default {
     },
     methods: {
         startTimeChanged: function(v) {
-            if (!this.end_time) {
+            if(this.bindStartToEnd) {
                 this.end_time = this.start_time
             }
+        },
+        unbindStartTime() {
+            this.bindStartToEnd = false
         },
         themeSelected(v) {
             this.theme = this.themes[v].name
